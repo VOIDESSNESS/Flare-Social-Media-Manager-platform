@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FLARE — Social Media Command Centre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────
+   FLARE Design System v1.0
+   Mohammed Buhari · Fire Safety Social Command Centre
+───────────────────────────────────────── */
+:root{
+  --bg:    #070a12;
+  --bg1:   #0b0f1c;
+  --bg2:   #101525;
+  --bg3:   #141b2e;
+  --bgc:   rgba(255,255,255,0.032);
+  --bgch:  rgba(255,255,255,0.058);
+  --b0:    rgba(255,255,255,0.045);
+  --b1:    rgba(255,255,255,0.08);
+  --b2:    rgba(255,255,255,0.13);
+  --teal:  #00c9b1;
+  --teal2: #00a895;
+  --tealbg:rgba(0,201,177,0.08);
+  --fire:  #ff6830;
+  --fire2: #ff3d00;
+  --firebg:rgba(255,104,48,0.08);
+  --warm:  #f5a623;
+  --warmbg:rgba(245,166,35,0.08);
+  --li:    #0077b5;
+  --libg:  rgba(0,119,181,0.1);
+  --fb:    #1877f2;
+  --fbbg:  rgba(24,119,242,0.1);
+  --ig:    #e1306c;
+  --igbg:  rgba(225,48,108,0.1);
+  --x:     #e7e9ea;
+  --xbg:   rgba(231,233,234,0.07);
+  --safe:  #22c55e;
+  --safebg:rgba(34,197,94,0.08);
+  --crit:  #ef4444;
+  --critbg:rgba(239,68,68,0.08);
+  --t1:    #e4eaf6;
+  --t2:    #8494ae;
+  --t3:    #3e5070;
+  --sidebar-w: 220px;
+  --top-h: 58px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'IBM Plex Sans',system-ui,sans-serif;
+  background:var(--bg);color:var(--t1);
+  font-size:13px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;height:100vh;
+}
+
+/* ── LOADER ── */
+#loader{
+  position:fixed;inset:0;z-index:9999;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity .8s ease, visibility .8s ease;
+}
+#loader.out{opacity:0;visibility:hidden;pointer-events:none}
+.ld-logo{
+  display:flex;align-items:center;gap:10px;margin-bottom:10px;
+}
+.ld-icon{
+  width:42px;height:42px;border-radius:10px;
+  background:linear-gradient(135deg,var(--teal),var(--teal2));
+  display:flex;align-items:center;justify-content:center;
+  animation:ldPop .6s cubic-bezier(.34,1.56,.64,1) forwards;
+  opacity:0;
+}
+@keyframes ldPop{to{opacity:1;transform:scale(1)}from{opacity:0;transform:scale(.7)}}
+.ld-wordmark{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;letter-spacing:.2em;color:var(--t1);opacity:0;animation:ldFade .5s .3s ease forwards}
+.ld-wordmark em{color:var(--teal);font-style:normal}
+@keyframes ldFade{to{opacity:1}from{opacity:0}}
+.ld-tagline{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--t3);margin-bottom:40px;opacity:0;animation:ldFade .5s .5s ease forwards}
+.ld-bar{width:160px;height:1px;background:var(--b0)}
+.ld-fill{height:1px;background:linear-gradient(90deg,var(--teal),var(--fire));width:0;animation:ldBar 2s .4s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes ldBar{to{width:100%}from{width:0}}
+.ld-msg{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--t3);margin-top:8px;opacity:0;animation:ldFade .4s .6s ease forwards}
+
+/* ── LAYOUT SHELL ── */
+#app{display:flex;height:100vh;overflow:hidden}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:var(--bg1);border-right:1px solid var(--b0);
+  display:flex;flex-direction:column;overflow:hidden;
+  transition:width .3s cubic-bezier(.4,0,.2,1);
+  position:relative;z-index:10;
+}
+.sb-top{
+  padding:18px 16px 14px;border-bottom:1px solid var(--b0);
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.sb-logo-box{
+  width:32px;height:32px;border-radius:8px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--teal),var(--teal2));
+  display:flex;align-items:center;justify-content:center;
+}
+.sb-logo-box svg{width:16px;height:16px;color:#fff}
+.sb-brand{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;letter-spacing:.16em;color:var(--t1)}
+.sb-brand em{color:var(--teal);font-style:normal}
+.sb-profile{
+  padding:12px 14px;border-bottom:1px solid var(--b0);
+  display:flex;align-items:center;gap:10px;
+}
+.sb-av{
+  width:34px;height:34px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#1a3a5c,#0d2440);
+  border:1.5px solid var(--teal);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--teal);
+}
+.sb-pname{font-size:12px;font-weight:600;color:var(--t1);line-height:1.2}
+.sb-prole{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--teal);letter-spacing:.08em}
+.sb-nav{flex:1;overflow-y:auto;padding:10px 8px}
+.sb-nav::-webkit-scrollbar{width:0}
+.sb-section-lbl{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:500;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--t3);
+  padding:10px 8px 5px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 10px;border-radius:8px;cursor:pointer;
+  color:var(--t2);font-size:12px;font-weight:500;
+  transition:all .18s ease;margin-bottom:2px;
+  border:1px solid transparent;position:relative;
+}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;transition:color .18s}
+.nav-item:hover{background:var(--bgc);color:var(--t1)}
+.nav-item.act{
+  background:var(--tealbg);color:var(--teal);
+  border-color:rgba(0,201,177,0.18);
+}
+.nav-item.act svg{color:var(--teal)}
+.nav-item .badge{
+  margin-left:auto;background:var(--teal);color:#000;
+  font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:99px;
+  font-family:'IBM Plex Mono',monospace;
+}
+.nav-item .badge.fire{background:var(--fire);color:#fff}
+.sb-bottom{
+  padding:12px 12px;border-top:1px solid var(--b0);flex-shrink:0;
+}
+.sb-today-chip{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.1em;
+  color:var(--teal);background:var(--tealbg);
+  border:1px solid rgba(0,201,177,0.2);
+  padding:5px 10px;border-radius:99px;text-align:center;
+}
+
+/* ── MAIN AREA ── */
+#main{
+  flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;
+}
+#topbar{
+  height:var(--top-h);flex-shrink:0;
+  background:var(--bg1);border-bottom:1px solid var(--b0);
+  display:flex;align-items:center;padding:0 28px;gap:16px;
+  justify-content:space-between;
+}
+.tb-section{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--t1)}
+.tb-section span{color:var(--teal);font-weight:400;font-size:12px;margin-left:8px;font-family:'IBM Plex Mono',monospace;letter-spacing:.08em}
+.tb-right{display:flex;align-items:center;gap:10px}
+.tb-date{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--t3);letter-spacing:.06em}
+.tb-action{
+  display:flex;align-items:center;gap:6px;
+  padding:6px 13px;border-radius:7px;
+  font-size:11.5px;font-weight:600;cursor:pointer;
+  transition:all .18s;border:none;font-family:inherit;
+}
+.tb-action.primary{background:var(--teal);color:#000}
+.tb-action.primary:hover{background:var(--teal2);transform:translateY(-1px)}
+.tb-action.ghost{background:var(--bgc);color:var(--t2);border:1px solid var(--b1)}
+.tb-action.ghost:hover{color:var(--t1);background:var(--bgch)}
+.tb-action svg{width:12px;height:12px}
+#content{
+  flex:1;overflow-y:auto;overflow-x:hidden;
+  scroll-behavior:smooth;
+}
+#content::-webkit-scrollbar{width:3px}
+#content::-webkit-scrollbar-thumb{background:rgba(0,201,177,.2);border-radius:99px}
+
+/* ── PANELS ── */
+.panel{display:none;animation:panelIn .35s cubic-bezier(.25,.46,.45,.94) forwards}
+.panel.act{display:block}
+@keyframes panelIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.panel-inner{padding:28px}
+.panel-inner.tight{padding:20px 28px}
+
+/* ── COMMON COMPONENTS ── */
+.eyebrow{
+  font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:500;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--teal);
+  display:block;margin-bottom:8px;
+}
+.panel-h{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--t1);margin-bottom:5px;letter-spacing:-.01em}
+.panel-sub{font-size:12.5px;color:var(--t2);line-height:1.7;margin-bottom:24px;max-width:580px}
+.card{
+  background:var(--bgc);border:1px solid var(--b1);
+  border-radius:12px;transition:all .22s cubic-bezier(.25,.46,.45,.94);
+}
+.card:hover{background:var(--bgch);border-color:var(--b2)}
+.card-p{padding:18px 20px}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.row-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.hline{height:1px;background:var(--b0);margin:20px 0}
+.tag{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10px;font-weight:500;padding:2px 8px;border-radius:99px;
+  font-family:'IBM Plex Mono',monospace;letter-spacing:.04em;
+}
+.tag.teal{background:var(--tealbg);color:var(--teal);border:1px solid rgba(0,201,177,.2)}
+.tag.fire{background:var(--firebg);color:var(--fire);border:1px solid rgba(255,104,48,.2)}
+.tag.li{background:var(--libg);color:var(--li);border:1px solid rgba(0,119,181,.2)}
+.tag.fb{background:var(--fbbg);color:var(--fb);border:1px solid rgba(24,119,242,.2)}
+.tag.ig{background:var(--igbg);color:var(--ig);border:1px solid rgba(225,48,108,.2)}
+.tag.safe{background:var(--safebg);color:var(--safe);border:1px solid rgba(34,197,94,.2)}
+.tag.warn{background:var(--warmbg);color:var(--warm);border:1px solid rgba(245,166,35,.2)}
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;
+  cursor:pointer;border:none;font-family:inherit;transition:all .18s;
+}
+.btn.teal{background:var(--teal);color:#000}
+.btn.teal:hover{background:var(--teal2);transform:translateY(-1px);box-shadow:0 4px 18px rgba(0,201,177,.25)}
+.btn.ghost{background:var(--bgc);color:var(--t2);border:1px solid var(--b1)}
+.btn.ghost:hover{color:var(--t1);background:var(--bgch)}
+.btn.fire{background:var(--fire);color:#fff}
+.btn.fire:hover{background:var(--fire2);transform:translateY(-1px)}
+.btn svg{width:13px;height:13px}
+.stat-num{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;line-height:1}
+.stat-lbl{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--t3);margin-top:4px}
+
+/* PLATFORM DOTS */
+.plt-dot{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:22px;height:22px;border-radius:6px;font-size:11px;
+}
+.plt-dot.li{background:var(--libg)}
+.plt-dot.fb{background:var(--fbbg)}
+.plt-dot.ig{background:var(--igbg)}
+
+/* ────────────────────────────────
+   DASHBOARD
+──────────────────────────────── */
+.dash-greeting{
+  background:linear-gradient(135deg,var(--bg2) 0%, rgba(0,201,177,0.04) 100%);
+  border:1px solid var(--b1);border-radius:14px;padding:22px 24px;
+  margin-bottom:16px;position:relative;overflow:hidden;
+}
+.dash-greeting::after{
+  content:'';position:absolute;right:-40px;top:-40px;
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,201,177,.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+.dash-greet-h{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:4px}
+.dash-greet-h em{color:var(--teal);font-style:normal}
+.dash-greet-p{font-size:12px;color:var(--t2);line-height:1.65}
+.dash-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.dash-stat{padding:16px 18px;border-radius:12px;background:var(--bgc);border:1px solid var(--b1)}
+.dash-stat-n{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:2px}
+.dash-stat-l{font-size:11px;color:var(--t2)}
+.today-grid{display:grid;grid-template-columns:1fr 320px;gap:14px}
+.today-posts{background:var(--bgc);border:1px solid var(--b1);border-radius:12px;padding:16px 18px}
+.today-h{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.today-h span{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);font-weight:400}
+.tp-item{
+  display:flex;gap:12px;align-items:flex-start;
+  padding:12px 0;border-bottom:1px solid var(--b0);
+  cursor:pointer;transition:all .18s;border-radius:8px;padding:10px 8px;margin:0 -8px;
+}
+.tp-item:last-child{border-bottom:none}
+.tp-item:hover{background:var(--bgch)}
+.tp-time{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--teal);
+  background:var(--tealbg);padding:3px 7px;border-radius:5px;
+  white-space:nowrap;flex-shrink:0;margin-top:1px;
+}
+.tp-platform{font-size:11px;font-weight:600;color:var(--t1);margin-bottom:2px}
+.tp-preview{font-size:11px;color:var(--t2);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tp-done{
+  width:18px;height:18px;border-radius:50%;border:1.5px solid var(--b2);
+  flex-shrink:0;margin-top:2px;cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;
+}
+.tp-done.done{background:var(--teal);border-color:var(--teal)}
+.tp-done svg{width:9px;height:9px;color:#000;display:none}
+.tp-done.done svg{display:block}
+.insights-card{background:var(--bgc);border:1px solid var(--b1);border-radius:12px;padding:16px 18px}
+.ins-h{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:14px}
+.ins-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--b0)}
+.ins-item:last-child{border-bottom:none}
+.ins-ico{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px}
+.ins-title{font-size:11.5px;font-weight:600;color:var(--t1);margin-bottom:1px}
+.ins-desc{font-size:10.5px;color:var(--t2);line-height:1.5}
+.law-alert{
+  margin-top:14px;padding:12px 15px;
+  background:rgba(245,166,35,.05);border:1px solid rgba(245,166,35,.18);
+  border-radius:10px;display:flex;gap:10px;align-items:flex-start;
+}
+.law-alert svg{width:13px;height:13px;color:var(--warm);flex-shrink:0;margin-top:2px}
+.law-alert p{font-size:11px;color:var(--t2);line-height:1.6}
+.law-alert p strong{color:var(--warm)}
+
+/* ────────────────────────────────
+   CALENDAR
+──────────────────────────────── */
+.cal-controls{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.cal-week-chip{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;
+  letter-spacing:.1em;background:var(--bg2);border:1px solid var(--b1);
+  color:var(--t2);padding:5px 12px;border-radius:7px;
+}
+.cal-week-chip em{color:var(--teal);font-style:normal}
+.regen-btn{
+  display:flex;align-items:center;gap:6px;padding:7px 15px;
+  background:var(--teal);color:#000;border-radius:8px;
+  font-size:11.5px;font-weight:700;cursor:pointer;border:none;font-family:inherit;
+  transition:all .2s;margin-left:auto;
+}
+.regen-btn:hover{background:var(--teal2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,201,177,.3)}
+.regen-btn svg{width:13px;height:13px;transition:transform .5s}
+.regen-btn.spinning svg{animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:8px}
+.cal-day-hd{
+  text-align:center;font-family:'IBM Plex Mono',monospace;
+  font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--t3);padding:6px 0;
+}
+.cal-cell{
+  background:var(--bgc);border:1px solid var(--b0);border-radius:10px;
+  min-height:100px;padding:9px 8px;cursor:pointer;
+  transition:all .22s cubic-bezier(.25,.46,.45,.94);
+  position:relative;overflow:hidden;
+}
+.cal-cell:hover{background:var(--bgch);border-color:var(--b1);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.cal-cell.today{border-color:rgba(0,201,177,.35);background:rgba(0,201,177,.04)}
+.cal-cell.today::before{content:'Today';position:absolute;top:5px;right:6px;font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--teal);letter-spacing:.08em}
+.cal-cell.w2{background:rgba(255,255,255,.015);border-color:rgba(255,255,255,.04)}
+.cal-dn{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--t1);margin-bottom:6px}
+.cal-posts{display:flex;flex-direction:column;gap:4px}
+.cal-post{
+  padding:4px 6px;border-radius:5px;font-size:9.5px;
+  font-weight:500;cursor:pointer;line-height:1.3;
+  transition:all .15s;position:relative;
+}
+.cal-post:hover{filter:brightness(1.2);transform:translateX(2px)}
+.cal-post.li{background:rgba(0,119,181,.18);color:#60b8e0;border-left:2px solid var(--li)}
+.cal-post.fb{background:rgba(24,119,242,.18);color:#7aadff;border-left:2px solid var(--fb)}
+.cal-post.ig{background:rgba(225,48,108,.18);color:#f09ab5;border-left:2px solid var(--ig)}
+.cal-post-lbl{font-family:'IBM Plex Mono',monospace;font-size:8px;opacity:.7;display:block;margin-bottom:1px}
+.cal-legend{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t2)}
+.leg-dot{width:8px;height:8px;border-radius:2px}
+/* Week 2 divider */
+.cal-week-divider{
+  grid-column:1/-1;background:var(--bg2);border:1px solid var(--b1);
+  border-radius:8px;padding:7px 14px;
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--teal);display:flex;align-items:center;gap:8px;
+}
+.cal-week-divider::before,.cal-week-divider::after{content:'';flex:1;height:1px;background:var(--b0)}
+
+/* POST MODAL */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;
+  backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:all .25s;
+  display:flex;align-items:center;justify-content:center;padding:24px;
+}
+.modal-overlay.show{opacity:1;visibility:visible}
+.modal-box{
+  background:var(--bg2);border:1px solid var(--b2);border-radius:16px;
+  width:100%;max-width:520px;max-height:85vh;overflow-y:auto;
+  transform:translateY(16px) scale(.97);transition:all .28s cubic-bezier(.34,1.2,.64,1);
+}
+.modal-overlay.show .modal-box{transform:none}
+.modal-box::-webkit-scrollbar{width:0}
+.modal-hd{
+  padding:18px 20px 14px;border-bottom:1px solid var(--b0);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.modal-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700}
+.modal-close{
+  width:28px;height:28px;border-radius:7px;cursor:pointer;
+  background:var(--bgc);border:1px solid var(--b1);
+  display:flex;align-items:center;justify-content:center;color:var(--t2);transition:all .15s;
+}
+.modal-close:hover{background:var(--bgch);color:var(--t1)}
+.modal-close svg{width:12px;height:12px}
+.modal-body{padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+.modal-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--t3);margin-bottom:5px}
+.modal-text{font-size:12.5px;color:var(--t2);line-height:1.7;background:var(--bg3);border-radius:8px;padding:12px 14px;border:1px solid var(--b0);white-space:pre-wrap}
+.modal-tags{display:flex;flex-wrap:wrap;gap:5px}
+.modal-ft{padding:14px 20px;border-top:1px solid var(--b0);display:flex;gap:8px;justify-content:flex-end}
+.copy-btn{
+  display:flex;align-items:center;gap:6px;padding:7px 14px;
+  font-size:11.5px;font-weight:600;cursor:pointer;border-radius:7px;
+  background:var(--bgc);color:var(--t2);border:1px solid var(--b1);
+  font-family:inherit;transition:all .15s;
+}
+.copy-btn:hover{color:var(--t1);background:var(--bgch)}
+.copy-btn.done{color:var(--teal);border-color:rgba(0,201,177,.3)}
+.copy-btn svg{width:12px;height:12px}
+
+/* ────────────────────────────────
+   POST LIBRARY
+──────────────────────────────── */
+.lib-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.lib-filter{
+  padding:6px 13px;border-radius:99px;font-size:11px;font-weight:500;
+  cursor:pointer;border:1px solid var(--b1);color:var(--t2);background:none;
+  font-family:inherit;transition:all .17s;
+}
+.lib-filter:hover{color:var(--t1);border-color:var(--b2)}
+.lib-filter.on{background:var(--teal);color:#000;border-color:var(--teal)}
+.lib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.lib-card{
+  background:var(--bgc);border:1px solid var(--b1);border-radius:11px;
+  padding:16px;cursor:pointer;transition:all .22s;
+  border-top:2px solid transparent;
+}
+.lib-card:hover{transform:translateY(-3px);background:var(--bgch);border-color:var(--b2)}
+.lib-card.li{border-top-color:var(--li)}
+.lib-card.fb{border-top-color:var(--fb)}
+.lib-card.ig{border-top-color:var(--ig)}
+.lib-card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.lib-card-plat{font-size:10.5px;font-weight:600}
+.lib-card-type{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--t3);letter-spacing:.08em;text-transform:uppercase}
+.lib-card-text{font-size:11.5px;color:var(--t2);line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:10px}
+.lib-card-ft{display:flex;align-items:center;gap:6px}
+.lib-best-time{
+  font-family:'IBM Plex Mono',monospace;font-size:9.5px;
+  color:var(--teal);background:var(--tealbg);padding:2px 7px;border-radius:99px;
+}
+
+/* ────────────────────────────────
+   PLATFORM PLAYBOOKS
+──────────────────────────────── */
+.platform-selector{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap}
+.plat-btn{
+  display:flex;align-items:center;gap:8px;padding:9px 16px;
+  border-radius:10px;cursor:pointer;border:1px solid var(--b1);
+  background:var(--bgc);color:var(--t2);font-size:12px;font-weight:600;
+  font-family:inherit;transition:all .2s;
+}
+.plat-btn:hover{color:var(--t1);background:var(--bgch)}
+.plat-btn.on.li{background:var(--libg);color:var(--li);border-color:rgba(0,119,181,.3)}
+.plat-btn.on.fb{background:var(--fbbg);color:var(--fb);border-color:rgba(24,119,242,.3)}
+.plat-btn.on.ig{background:var(--igbg);color:var(--ig);border-color:rgba(225,48,108,.3)}
+.plat-ico{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.plat-panel{display:none;animation:panelIn .3s ease}
+.plat-panel.show{display:block}
+.timing-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:22px}
+.timing-day{background:var(--bgc);border:1px solid var(--b0);border-radius:8px;padding:10px 8px;text-align:center}
+.timing-day.post{border-color:rgba(0,201,177,.25);background:rgba(0,201,177,.04)}
+.timing-day-n{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;margin-bottom:5px}
+.timing-slots{display:flex;flex-direction:column;gap:3px}
+.timing-slot{
+  font-family:'IBM Plex Mono',monospace;font-size:8.5px;
+  padding:2px 4px;border-radius:3px;color:var(--teal);
+  background:var(--tealbg);
+}
+.timing-no{color:var(--t3);font-size:9px;font-family:'IBM Plex Mono',monospace}
+.guide-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
+.guide-card{background:var(--bgc);border:1px solid var(--b1);border-radius:10px;padding:16px}
+.guide-card-h{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.guide-card-h svg{width:14px;height:14px}
+.guide-list{display:flex;flex-direction:column;gap:7px}
+.guide-item{display:flex;align-items:flex-start;gap:8px;font-size:11.5px;color:var(--t2);line-height:1.55}
+.guide-item::before{content:'→';color:var(--teal);flex-shrink:0;font-size:11px;margin-top:2px}
+.do-dont{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.do-box{background:var(--safebg);border:1px solid rgba(34,197,94,.2);border-radius:10px;padding:14px}
+.dont-box{background:var(--critbg);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:14px}
+.do-h{font-size:12px;font-weight:700;color:var(--safe);margin-bottom:8px;display:flex;gap:5px;align-items:center}
+.dont-h{font-size:12px;font-weight:700;color:var(--crit);margin-bottom:8px;display:flex;gap:5px;align-items:center}
+.dd-list{display:flex;flex-direction:column;gap:5px}
+.dd-item{font-size:11px;color:var(--t2);line-height:1.5;padding-left:12px;position:relative}
+.dd-item::before{content:'•';position:absolute;left:0;opacity:.5}
+
+/* ────────────────────────────────
+   GROWTH STRATEGY
+──────────────────────────────── */
+.pillar-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.pillar{
+  background:var(--bgc);border:1px solid var(--b1);border-radius:11px;
+  padding:16px;text-align:center;transition:all .22s;
+}
+.pillar:hover{transform:translateY(-3px);background:var(--bgch)}
+.pillar-pct{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:3px}
+.pillar-name{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:3px}
+.pillar-desc{font-size:10.5px;color:var(--t2);line-height:1.5}
+.competitor-table{width:100%;border-collapse:collapse;margin-bottom:22px}
+.competitor-table th{
+  font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--t3);text-align:left;
+  padding:8px 12px;border-bottom:1px solid var(--b0);font-weight:500;
+}
+.competitor-table td{padding:10px 12px;border-bottom:1px solid var(--b0);font-size:11.5px;color:var(--t2);vertical-align:top}
+.competitor-table tr:hover td{background:var(--bgc)}
+.ct-name{font-weight:600;color:var(--t1);font-size:12px}
+.ct-gap{color:var(--teal)}
+.ct-weakness{color:var(--fire)}
+.growth-tips{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.gt{background:var(--bgc);border:1px solid var(--b1);border-radius:10px;padding:15px}
+.gt:hover{background:var(--bgch);border-color:var(--b2)}
+.gt-n{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:24px;height:24px;border-radius:6px;background:var(--teal);
+  color:#000;font-family:'Syne',sans-serif;font-size:12px;font-weight:800;
+  margin-bottom:9px;
+}
+.gt-t{font-size:12.5px;font-weight:600;color:var(--t1);margin-bottom:4px}
+.gt-d{font-size:11px;color:var(--t2);line-height:1.6}
+.impact-bar{
+  margin-top:8px;height:3px;border-radius:99px;background:var(--b0);overflow:hidden;
+}
+.impact-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--teal),var(--teal2))}
+
+/* ────────────────────────────────
+   UK FIRE LAW HUB
+──────────────────────────────── */
+.law-quick{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:22px}
+.law-card{
+  background:var(--bgc);border:1px solid var(--b1);border-radius:10px;
+  padding:16px;border-left:3px solid var(--fire);transition:all .2s;
+}
+.law-card:hover{transform:translateX(3px);background:var(--bgch)}
+.law-yr{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--fire);letter-spacing:.1em;margin-bottom:5px}
+.law-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--t1);margin-bottom:6px;line-height:1.25}
+.law-desc{font-size:11px;color:var(--t2);line-height:1.6;margin-bottom:8px}
+.law-hook{
+  font-size:11px;color:var(--warm);background:var(--warmbg);
+  border-radius:5px;padding:5px 8px;border-left:2px solid var(--warm);
+  line-height:1.5;font-style:italic;
+}
+.sign-quick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px}
+.sq-card{
+  background:var(--bgc);border:1px solid var(--b1);border-radius:9px;
+  padding:12px 8px;text-align:center;cursor:pointer;transition:all .22s cubic-bezier(.34,1.4,.64,1);
+}
+.sq-card:hover{transform:translateY(-3px) scale(1.03);background:var(--bgch);border-color:var(--b2)}
+.sq-ico{font-size:24px;margin-bottom:6px}
+.sq-name{font-size:10px;font-weight:500;color:var(--t2);line-height:1.3}
+.content-hook-list{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.hook-item{
+  display:flex;gap:10px;align-items:flex-start;
+  background:var(--bgc);border:1px solid var(--b0);border-radius:8px;padding:11px 13px;
+  transition:all .17s;cursor:pointer;
+}
+.hook-item:hover{background:var(--bgch);border-color:var(--b1);transform:translateX(3px)}
+.hook-tag{flex-shrink:0}
+.hook-text{font-size:11.5px;color:var(--t2);line-height:1.6}
+.hook-text strong{color:var(--t1);display:block;margin-bottom:1px;font-size:12px}
+
+/* ────────────────────────────────
+   TOOLS
+──────────────────────────────── */
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:13px}
+.tool-card{
+  background:var(--bgc);border:1px solid var(--b1);border-radius:12px;
+  padding:18px;transition:all .22s;
+}
+.tool-card:hover{transform:translateY(-3px);background:var(--bgch);border-color:var(--b2)}
+.tool-ico{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:12px}
+.tool-name{font-family:'Syne',sans-serif;font-size:13.5px;font-weight:700;color:var(--t1);margin-bottom:2px}
+.tool-badge{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.06em;
+  padding:2px 7px;border-radius:99px;display:inline-block;margin-bottom:8px;
+}
+.tool-desc{font-size:11.5px;color:var(--t2);line-height:1.62;margin-bottom:10px}
+.tool-why{
+  font-size:10.5px;color:var(--teal);background:var(--tealbg);
+  border-radius:5px;padding:5px 9px;line-height:1.5;
+}
+
+/* SCROLLBAR CUSTOM */
+.modal-overlay::-webkit-scrollbar{width:0}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(0,201,177,.2);border-radius:99px}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+  :root{--sidebar-w:58px}
+  .sb-brand,.sb-pname,.sb-prole,.sb-section-lbl,.nav-item span,.sb-today-chip{display:none}
+  .sb-profile{justify-content:center}
+  .nav-item{justify-content:center;padding:10px}
+  .sb-top{justify-content:center}
+  .nav-item .badge{display:none}
+  .dash-stats{grid-template-columns:1fr 1fr}
+  .today-grid{grid-template-columns:1fr}
+  .row-3,.row-4{grid-template-columns:1fr 1fr}
+  .pillar-grid{grid-template-columns:1fr 1fr}
+  .guide-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .row-2,.row-3,.row-4{grid-template-columns:1fr}
+  .cal-grid{grid-template-columns:repeat(3,1fr)}
+  .panel-inner{padding:16px}
+  .do-dont{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="ld-logo">
+    <div class="ld-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    </div>
+    <div class="ld-wordmark">FLA<em>RE</em></div>
+  </div>
+  <div class="ld-tagline">Social Command Centre · Fire Safety UK</div>
+  <div class="ld-bar"><div class="ld-fill"></div></div>
+  <div class="ld-msg" id="ld-msg">Loading your workspace…</div>
+</div>
+
+<!-- APP SHELL -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div class="sb-top">
+      <div class="sb-logo-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
+      <span class="sb-brand">FLA<em>RE</em></span>
+    </div>
+    <div class="sb-profile">
+      <div class="sb-av">MB</div>
+      <div>
+        <div class="sb-pname">Mohammed Buhari</div>
+        <div class="sb-prole">Social Media Manager</div>
+      </div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-section-lbl">Workspace</div>
+      <div class="nav-item act" onclick="nav('dashboard',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <span>Dashboard</span>
+      </div>
+      <div class="nav-item" onclick="nav('calendar',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span>Content Calendar</span>
+        <span class="badge" id="cal-badge">14</span>
+      </div>
+      <div class="nav-item" onclick="nav('library',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+        <span>Post Library</span>
+        <span class="badge">42</span>
+      </div>
+      <div class="sb-section-lbl">Strategy</div>
+      <div class="nav-item" onclick="nav('playbooks',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        <span>Platform Playbooks</span>
+      </div>
+      <div class="nav-item" onclick="nav('growth',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        <span>Growth Strategy</span>
+      </div>
+      <div class="sb-section-lbl">Knowledge</div>
+      <div class="nav-item" onclick="nav('lawhub',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>UK Fire Law Hub</span>
+        <span class="badge fire">New</span>
+      </div>
+      <div class="nav-item" onclick="nav('tools',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        <span>Tools &amp; Stack</span>
+      </div>
+    </nav>
+    <div class="sb-bottom">
+      <div class="sb-today-chip" id="today-chip">—</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div id="main">
+    <div id="topbar">
+      <div class="tb-section" id="tb-title">Dashboard <span>Overview</span></div>
+      <div class="tb-right">
+        <span class="tb-date" id="tb-date">—</span>
+        <button class="tb-action ghost" onclick="nav('calendar',document.querySelector('.nav-item:nth-child(3)'))">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          View Calendar
+        </button>
+        <button class="tb-action primary" onclick="nav('library',document.querySelectorAll('.nav-item')[3])">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New Post
+        </button>
+      </div>
+    </div>
+
+    <div id="content">
+
+      <!-- ══════ DASHBOARD ══════ -->
+      <div id="panel-dashboard" class="panel act">
+        <div class="panel-inner">
+          <div class="dash-greeting">
+            <div class="dash-greet-h">Good morning, <em>Mohammed</em> 👋</div>
+            <p class="dash-greet-p">Your FLARE command centre is live. You have <strong id="posts-today-n" style="color:var(--teal)">3 posts</strong> scheduled today across LinkedIn and Facebook. Fire safety season is peak — your audience is watching.</p>
+          </div>
+          <div class="dash-stats">
+            <div class="dash-stat">
+              <div class="dash-stat-n" style="color:var(--teal)">3</div>
+              <div class="dash-stat-l">Posts today</div>
+            </div>
+            <div class="dash-stat">
+              <div class="dash-stat-n" style="color:var(--fire)">28</div>
+              <div class="dash-stat-l">Posts this fortnight</div>
+            </div>
+            <div class="dash-stat">
+              <div class="dash-stat-n" style="color:var(--li)">LI</div>
+              <div class="dash-stat-l">Primary platform</div>
+            </div>
+            <div class="dash-stat">
+              <div class="dash-stat-n" style="color:var(--warm)">6</div>
+              <div class="dash-stat-l">Content themes</div>
+            </div>
+          </div>
+          <div class="today-grid">
+            <div class="today-posts">
+              <div class="today-h">Today's Posting Agenda <span>Tap to preview</span></div>
+              <div id="today-list"></div>
+            </div>
+            <div class="insights-card">
+              <div class="ins-h">🔥 Intelligence Briefing</div>
+              <div class="ins-item">
+                <div class="ins-ico" style="background:var(--libg)">💼</div>
+                <div>
+                  <div class="ins-title">LinkedIn Peak: 8–9am &amp; 12–1pm</div>
+                  <div class="ins-desc">Your compliance-focused B2B audience is most active mid-morning and at lunch on Tue–Thu.</div>
+                </div>
+              </div>
+              <div class="ins-item">
+                <div class="ins-ico" style="background:var(--fbbg)">📘</div>
+                <div>
+                  <div class="ins-title">Facebook: 7–9pm engagement spike</div>
+                  <div class="ins-desc">Landlords and property owners scroll after business hours. Post awareness content here.</div>
+                </div>
+              </div>
+              <div class="ins-item">
+                <div class="ins-ico" style="background:var(--firebg)">🔥</div>
+                <div>
+                  <div class="ins-title">Fire safety is regulatory news</div>
+                  <div class="ins-desc">Post near regulatory events (October Fire Door Safety Week, Fire Safety Month) to ride organic reach.</div>
+                </div>
+              </div>
+              <div class="ins-item">
+                <div class="ins-ico" style="background:var(--safebg)">📈</div>
+                <div>
+                  <div class="ins-title">Question posts drive 3× engagement</div>
+                  <div class="ins-desc">Start posts with a direct question. "Do you know your legal duty as an HMO landlord?" outperforms all other hooks.</div>
+                </div>
+              </div>
+              <div class="law-alert">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <p><strong>Law in your feed:</strong> The Fire Safety (England) Regulations 2022 require quarterly fire door checks in multi-occupied buildings. Use this as content — your audience must know.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════ CALENDAR ══════ -->
+      <div id="panel-calendar" class="panel">
+        <div class="panel-inner">
+          <span class="eyebrow">Content Engine</span>
+          <h2 class="panel-h">14-Day Intelligent Content Calendar</h2>
+          <p class="panel-sub">FLARE's content engine builds your full fortnight schedule — intelligently balanced across platforms, content types, and UK fire safety themes. Click any post to preview and copy. Regenerate for a fresh two-week cycle.</p>
+          <div class="cal-controls">
+            <div class="cal-week-chip">Cycle: <em id="cycle-dates">—</em></div>
+            <div class="cal-legend">
+              <div class="leg-item"><div class="leg-dot" style="background:var(--li)"></div>LinkedIn</div>
+              <div class="leg-item"><div class="leg-dot" style="background:var(--fb)"></div>Facebook</div>
+              <div class="leg-item"><div class="leg-dot" style="background:var(--ig)"></div>Instagram</div>
+            </div>
+            <button class="regen-btn" id="regen-btn" onclick="regenerateCalendar()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+              Regenerate Fortnight
+            </button>
+          </div>
+          <div class="cal-grid" id="cal-day-headers">
+            <div class="cal-day-hd">Mon</div>
+            <div class="cal-day-hd">Tue</div>
+            <div class="cal-day-hd">Wed</div>
+            <div class="cal-day-hd">Thu</div>
+            <div class="cal-day-hd">Fri</div>
+            <div class="cal-day-hd">Sat</div>
+            <div class="cal-day-hd">Sun</div>
+          </div>
+          <div class="cal-grid" id="cal-week1"></div>
+          <div class="cal-grid" style="grid-template-columns:1fr;margin:8px 0">
+            <div class="cal-week-divider">Week 2</div>
+          </div>
+          <div class="cal-grid" id="cal-week2"></div>
+        </div>
+      </div>
+
+      <!-- ══════ LIBRARY ══════ -->
+      <div id="panel-library" class="panel">
+        <div class="panel-inner">
+          <span class="eyebrow">Post Library</span>
+          <h2 class="panel-h">Content Database — 42 Fire Safety Posts</h2>
+          <p class="panel-sub">Every post is crafted for UK fire safety authority — targeting hotel operators, HMO landlords, Airbnb hosts, and property managers. Filter by platform or content type. Click any card to preview and copy.</p>
+          <div class="lib-filters">
+            <button class="lib-filter on" onclick="filterLib('all',this)">All Posts</button>
+            <button class="lib-filter" onclick="filterLib('linkedin',this)">LinkedIn</button>
+            <button class="lib-filter" onclick="filterLib('facebook',this)">Facebook</button>
+            <button class="lib-filter" onclick="filterLib('instagram',this)">Instagram</button>
+            <button class="lib-filter" onclick="filterLib('educational',this)">Educational</button>
+            <button class="lib-filter" onclick="filterLib('awareness',this)">Awareness</button>
+            <button class="lib-filter" onclick="filterLib('engagement',this)">Engagement</button>
+            <button class="lib-filter" onclick="filterLib('regulatory',this)">Regulatory</button>
+            <button class="lib-filter" onclick="filterLib('promotional',this)">Promotional</button>
+          </div>
+          <div class="lib-grid" id="lib-grid"></div>
+        </div>
+      </div>
+
+      <!-- ══════ PLAYBOOKS ══════ -->
+      <div id="panel-playbooks" class="panel">
+        <div class="panel-inner">
+          <span class="eyebrow">Platform Strategy</span>
+          <h2 class="panel-h">Platform Playbooks</h2>
+          <p class="panel-sub">Each platform requires a distinct approach, voice, and content rhythm. Select a platform to reveal its full playbook — tailored for fire safety authority in the UK market.</p>
+          <div class="platform-selector">
+            <button class="plat-btn on li" onclick="switchPlat('li',this)">
+              <div class="plat-ico" style="background:var(--libg)">💼</div>LinkedIn
+            </button>
+            <button class="plat-btn fb" onclick="switchPlat('fb',this)">
+              <div class="plat-ico" style="background:var(--fbbg)">📘</div>Facebook
+            </button>
+            <button class="plat-btn ig" onclick="switchPlat('ig',this)">
+              <div class="plat-ico" style="background:var(--igbg)">📸</div>Instagram
+            </button>
+          </div>
+
+          <!-- LINKEDIN -->
+          <div id="plat-li" class="plat-panel show">
+            <div class="row-3" style="margin-bottom:16px">
+              <div class="card card-p">
+                <div class="stat-lbl">Posting frequency</div>
+                <div class="stat-num" style="color:var(--li);margin-top:6px">5×/week</div>
+                <div style="font-size:11px;color:var(--t2);margin-top:4px">Mon–Fri · Skip weekends</div>
+              </div>
+              <div class="card card-p">
+                <div class="stat-lbl">Primary audience</div>
+                <div class="stat-num" style="color:var(--li);margin-top:6px;font-size:16px">B2B</div>
+                <div style="font-size:11px;color:var(--t2);margin-top:4px">Hotel GMs, HMO Landlords, FM Directors</div>
+              </div>
+              <div class="card card-p">
+                <div class="stat-lbl">Best content format</div>
+                <div class="stat-num" style="color:var(--li);margin-top:6px;font-size:16px">Lists</div>
+                <div style="font-size:11px;color:var(--t2);margin-top:4px">Numbered insights, legal breakdowns, polls</div>
+              </div>
+            </div>
+            <h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:12px">Optimal Posting Times — UK Business Hours</h3>
+            <div class="timing-grid">
+              <div class="timing-day post"><div class="timing-day-n">Mon</div><div class="timing-slots"><span class="timing-slot">08:00</span><span class="timing-slot">17:30</span></div></div>
+              <div class="timing-day post"><div class="timing-day-n">Tue</div><div class="timing-slots"><span class="timing-slot">08:30</span><span class="timing-slot">12:00</span></div></div>
+              <div class="timing-day post"><div class="timing-day-n">Wed</div><div class="timing-slots"><span class="timing-slot">09:00</span><span class="timing-slot">12:30</span></div></div>
+              <div class="timing-day post"><div class="timing-day-n">Thu</div><div class="timing-slots"><span class="timing-slot">08:30</span><span class="timing-slot">17:00</span></div></div>
+              <div class="timing-day post"><div class="timing-day-n">Fri</div><div class="timing-slots"><span class="timing-slot">08:00</span></div></div>
+              <div class="timing-day"><div class="timing-day-n">Sat</div><span class="timing-no">Rest</span></div>
+              <div class="timing-day"><div class="timing-day-n">Sun</div><span class="timing-no">Rest</span></div>
+            </div>
+            <div class="guide-grid">
+              <div class="guide-card">
+                <div class="guide-card-h" style="color:var(--li)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Voice &amp; Tone</div>
+                <div class="guide-list">
+                  <div class="guide-item">Authoritative but approachable — write like a senior fire consultant</div>
+                  <div class="guide-item">Always reference UK legislation by name (RRO 2005, BS 9999)</div>
+                  <div class="guide-item">Open with a bold statement or compelling question</div>
+                  <div class="guide-item">Use numbered lists — LinkedIn's algorithm rewards structured content</div>
+                  <div class="guide-item">End every post with a clear CTA: "DM us for a free risk assessment consult"</div>
+                  <div class="guide-item">Keep posts 150–300 words. Long-form performs on LinkedIn but must earn it</div>
+                </div>
+              </div>
+              <div class="guide-card">
+                <div class="guide-card-h" style="color:var(--li)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></svg>Content Pillars</div>
+                <div class="guide-list">
+                  <div class="guide-item"><strong style="color:var(--t1)">Legal Awareness (25%)</strong> — what the law requires of your industry</div>
+                  <div class="guide-item"><strong style="color:var(--t1)">Risk Education (25%)</strong> — common risks in hotels, HMOs, commercial settings</div>
+                  <div class="guide-item"><strong style="color:var(--t1)">Equipment Guidance (20%)</strong> — what system/product solves what problem</div>
+                  <div class="guide-item"><strong style="color:var(--t1)">Case Studies (15%)</strong> — real UK enforcement, prosecutions, incidents</div>
+                  <div class="guide-item"><strong style="color:var(--t1)">Consultation CTAs (15%)</strong> — direct invitations to reach out</div>
+                </div>
+              </div>
+            </div>
+            <div class="do-dont">
+              <div class="do-box"><div class="do-h">✅ Do on LinkedIn</div><div class="dd-list"><div class="dd-item">Tag relevant companies (hotels, housing associations) where appropriate</div><div class="dd-item">Use 3–5 hashtags only — overloading reduces reach</div><div class="dd-item">Publish carousel/document posts for in-depth regulatory breakdowns</div><div class="dd-item">Reply to every comment within 2 hours to boost post ranking</div><div class="dd-item">Post from personal profile AND company page for maximum reach</div></div></div>
+              <div class="dont-box"><div class="dont-h">❌ Don't on LinkedIn</div><div class="dd-list"><div class="dd-item">Never post clickbait — your audience is professional and will disengage</div><div class="dd-item">Avoid posting at weekends — B2B audience goes dark</div><div class="dd-item">Don't promote services in every post — it signals spam</div><div class="dd-item">Never ignore comments — LinkedIn penalises low-engagement posts quickly</div></div></div>
+            </div>
+          </div>
+
+          <!-- FACEBOOK -->
+          <div id="plat-fb" class="plat-panel">
+            <div class="row-3" style="margin-bottom:16px">
+              <div class="card card-p"><div class="stat-lbl">Posting frequency</div><div class="stat-num" style="color:var(--fb);margin-top:6px">6×/week</div><div style="font-size:11px;color:var(--t2);margin-top:4px">Mon–Sat · Off Sunday</div></div>
+              <div class="card card-p"><div class="stat-lbl">Primary audience</div><div class="stat-num" style="color:var(--fb);margin-top:6px;font-size:16px">B2C+B</div><div style="font-size:11px;color:var(--t2);margin-top:4px">Landlords, homeowners, Airbnb hosts, community groups</div></div>
+              <div class="card card-p"><div class="stat-lbl">Best content format</div><div class="stat-num" style="color:var(--fb);margin-top:6px;font-size:16px">Video</div><div style="font-size:11px;color:var(--t2);margin-top:4px">Short video + infographic posts drive highest reach</div></div>
+            </div>
+            <h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:12px">Optimal Posting Times — UK Evening Audience</h3>
+            <div class="timing-grid">
+              <div class="timing-day post"><div class="timing-day-n">Mon</div><div class="timing-slots"><span class="timing-slot">09:00</span><span class="timing-slot">19:30</span></div></div>
+              <div class="timing-day post"><div class="timing-day-n">Tue</div><div class="timing-slots"><span class="timing-slot">13:00</span><span class="timing-slot">20:00</span></div></div>
+              <div class="timing-day post"><div class="timing-day-n">Wed</div><div class="timing-slots"><span class="timing-slot">09:30</span><span class="timing-slot">19:00</span></div></div>
+              <div class="timing-day post"><div class="timing-day-n">Thu</div><div class="timing-slots"><span class="timing-slot">13:00</span><span class="timing-slot">20:00</span></div></div>
+              <div class="timing-day post"><div class="timing-day-n">Fri</div><div class="timing-slots"><span class="timing-slot">09:00</span><span class="timing-slot">18:00</span></div></div>
+              <div class="timing-day post"><div class="timing-day-n">Sat</div><div class="timing-slots"><span class="timing-slot">11:00</span></div></div>
+              <div class="timing-day"><div class="timing-day-n">Sun</div><span class="timing-no">Rest</span></div>
+            </div>
+            <div class="guide-grid">
+              <div class="guide-card">
+                <div class="guide-card-h" style="color:var(--fb)">Voice &amp; Tone</div>
+                <div class="guide-list">
+                  <div class="guide-item">Conversational and direct — write like a knowledgeable friend, not a corporation</div>
+                  <div class="guide-item">Use "you" language: "Your property could be at risk if…"</div>
+                  <div class="guide-item">Shorter posts perform — 80–150 words with a strong hook line</div>
+                  <div class="guide-item">Add emojis strategically — 2–3 max, relevant to content</div>
+                  <div class="guide-item">Questions in the caption drive comments: "Did you know this was law?"</div>
+                  <div class="guide-item">Post in relevant Facebook Groups: landlord groups, Airbnb UK, property investor communities</div>
+                </div>
+              </div>
+              <div class="guide-card">
+                <div class="guide-card-h" style="color:var(--fb)">Facebook Groups Strategy</div>
+                <div class="guide-list">
+                  <div class="guide-item"><strong style="color:var(--t1)">UK Landlords Network</strong> — 200K+ members, prime for fire compliance posts</div>
+                  <div class="guide-item"><strong style="color:var(--t1)">Airbnb Host UK</strong> — short-let hosts need fire risk assessment guidance</div>
+                  <div class="guide-item"><strong style="color:var(--t1)">Property Investment UK</strong> — HMO investors are your highest-value audience</div>
+                  <div class="guide-item">Post value-first content (no hard selling) in Groups 3×/week</div>
+                  <div class="guide-item">Always add your business page link in the comment, not the post</div>
+                </div>
+              </div>
+            </div>
+            <div class="do-dont">
+              <div class="do-box"><div class="do-h">✅ Do on Facebook</div><div class="dd-list"><div class="dd-item">Share alarming (but accurate) statistics to drive shares</div><div class="dd-item">Run short polls: "Does your HMO have a fire risk assessment?"</div><div class="dd-item">Respond to comments promptly — Facebook rewards conversation</div><div class="dd-item">Use Facebook Events for any webinars or fire safety workshops</div></div></div>
+              <div class="dont-box"><div class="dont-h">❌ Don't on Facebook</div><div class="dd-list"><div class="dd-item">Don't over-promote — Facebook suppresses overt sales content</div><div class="dd-item">Avoid lengthy legal text without visual support</div><div class="dd-item">Never post without a visual — even a simple branded graphic doubles reach</div></div></div>
+            </div>
+          </div>
+
+          <!-- INSTAGRAM -->
+          <div id="plat-ig" class="plat-panel">
+            <div class="row-3" style="margin-bottom:16px">
+              <div class="card card-p"><div class="stat-lbl">Posting frequency</div><div class="stat-num" style="color:var(--ig);margin-top:6px">4×/week</div><div style="font-size:11px;color:var(--t2);margin-top:4px">Mon, Wed, Fri + 1 Reel/week</div></div>
+              <div class="card card-p"><div class="stat-lbl">Primary audience</div><div class="stat-num" style="color:var(--ig);margin-top:6px;font-size:16px">Visual</div><div style="font-size:11px;color:var(--t2);margin-top:4px">Young landlords, design-conscious hosts, hospitality managers</div></div>
+              <div class="card card-p"><div class="stat-lbl">Best content format</div><div class="stat-num" style="color:var(--ig);margin-top:6px;font-size:16px">Reels</div><div style="font-size:11px;color:var(--t2);margin-top:4px">30-sec educational reels drive highest discovery reach</div></div>
+            </div>
+            <div class="guide-grid">
+              <div class="guide-card">
+                <div class="guide-card-h" style="color:var(--ig)">Instagram Content Types</div>
+                <div class="guide-list">
+                  <div class="guide-item"><strong style="color:var(--t1)">Reels (1×/week)</strong> — "Did you know this fire sign could save your life?" quick videos</div>
+                  <div class="guide-item"><strong style="color:var(--t1)">Carousels (2×/week)</strong> — "5 things every Airbnb host must do by law" slide decks</div>
+                  <div class="guide-item"><strong style="color:var(--t1)">Static Posts (1×/week)</strong> — bold infographic: fire extinguisher colour guide</div>
+                  <div class="guide-item">Stories daily: polls, questions, quick tips, countdown to regulation deadlines</div>
+                  <div class="guide-item">Link in bio: direct to consultation booking or website</div>
+                </div>
+              </div>
+              <div class="guide-card">
+                <div class="guide-card-h" style="color:var(--ig)">Hashtag Strategy (UK Fire)</div>
+                <div class="guide-list">
+                  <div class="guide-item"><strong style="color:var(--t1)">Brand tags:</strong> #FireSafetyUK #UKFireCompliance #IGNIS</div>
+                  <div class="guide-item"><strong style="color:var(--t1)">Audience tags:</strong> #HMOLandlord #AirbnbHost #HotelSafety #PropertyManagement</div>
+                  <div class="guide-item"><strong style="color:var(--t1)">Discovery tags:</strong> #FireSafety #FirePrevention #FireDoors #SmokeAlarm</div>
+                  <div class="guide-item">Use 8–12 hashtags max — mix large, medium and niche</div>
+                  <div class="guide-item">Use UK-specific location tags on all posts</div>
+                </div>
+              </div>
+            </div>
+            <div class="do-dont">
+              <div class="do-box"><div class="do-h">✅ Do on Instagram</div><div class="dd-list"><div class="dd-item">Lead with striking visual — colour-coded fire extinguisher graphics perform exceptionally</div><div class="dd-item">Caption: hook in line 1, details behind "more", CTA at end</div><div class="dd-item">Collaborate with UK property influencers via tags</div><div class="dd-item">Post consistently — Instagram's algorithm rewards daily presence</div></div></div>
+              <div class="dont-box"><div class="dont-h">❌ Don't on Instagram</div><div class="dd-list"><div class="dd-item">Don't share text-heavy posts — they don't work on Instagram's visual feed</div><div class="dd-item">Avoid overly corporate language — this audience is younger and expects personality</div><div class="dd-item">Never post low-quality graphics — design must be on-brand and sharp</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════ GROWTH ══════ -->
+      <div id="panel-growth" class="panel">
+        <div class="panel-inner">
+          <span class="eyebrow">Growth Intelligence</span>
+          <h2 class="panel-h">Competitor Analysis &amp; Growth Strategy</h2>
+          <p class="panel-sub">Understanding the UK fire safety social media landscape allows us to find the gaps, dominate underserved content areas, and build a following that competitors haven't captured. Here is the strategic intelligence.</p>
+          <h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:14px">Content Pillars — Recommended Distribution</h3>
+          <div class="pillar-grid">
+            <div class="pillar"><div class="pillar-pct" style="color:var(--teal)">30%</div><div class="pillar-name">Education</div><div class="pillar-desc">Laws, regulations, equipment guides, risk identification</div></div>
+            <div class="pillar"><div class="pillar-pct" style="color:var(--fire)">25%</div><div class="pillar-name">Awareness</div><div class="pillar-desc">UK statistics, incident data, real consequences of non-compliance</div></div>
+            <div class="pillar"><div class="pillar-pct" style="color:var(--li)">25%</div><div class="pillar-name">Engagement</div><div class="pillar-desc">Polls, questions, challenges, quizzes, "did you know" formats</div></div>
+            <div class="pillar"><div class="pillar-pct" style="color:var(--warm)">20%</div><div class="pillar-name">Conversion</div><div class="pillar-desc">Consultation CTAs, service showcases, case studies, testimonials</div></div>
+          </div>
+          <h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:14px">Competitor Landscape — UK Fire Safety Socials</h3>
+          <div class="card" style="overflow:hidden;margin-bottom:22px">
+            <table class="competitor-table" style="width:100%">
+              <thead><tr><th>Competitor</th><th>Strength</th><th>Gap We Exploit</th><th>Our Counter</th></tr></thead>
+              <tbody>
+                <tr><td><div class="ct-name">London Fire Brigade</div><div style="font-size:10px;color:var(--t3)">Government authority</div></td><td style="font-size:11px">Massive reach, trusted brand, residential focus</td><td class="ct-gap">No B2B content. No equipment/product guidance. No HMO-specific posts.</td><td style="font-size:11px">Dominate the HMO/hotel compliance space they ignore entirely</td></tr>
+                <tr><td><div class="ct-name">NFCC</div><div style="font-size:10px;color:var(--t3)">National Fire Chiefs</div></td><td style="font-size:11px">Policy authority, professional audience</td><td class="ct-gap">Dry content, no storytelling, no engagement tactics, low shares</td><td style="font-size:11px">Make compliance content engaging with storytelling and visual formats</td></tr>
+                <tr><td><div class="ct-name">Chubb Fire &amp; Security</div><div style="font-size:10px;color:var(--t3)">Commercial provider</div></td><td style="font-size:11px">Strong LinkedIn, product marketing, corporate clients</td><td class="ct-gap ct-weakness">Speaks to enterprise only — ignores SME landlords and hospitality operators</td><td style="font-size:11px">Target the underserved SME/hospitality segment directly</td></tr>
+                <tr><td><div class="ct-name">Safelincs</div><div style="font-size:10px;color:var(--t3)">Online fire equipment</div></td><td style="font-size:11px">Strong Facebook, product-focused content</td><td class="ct-gap">No advisory/consultancy content. Purely transactional. No law commentary.</td><td style="font-size:11px">Position as the trusted advisor — not just a supplier</td></tr>
+                <tr><td><div class="ct-name">Fire Industry Association</div><div style="font-size:10px;color:var(--t3)">Trade body</div></td><td style="font-size:11px">Industry credibility, technical depth</td><td class="ct-gap ct-weakness">Invisible to non-professionals. No consumer or landlord content. No Instagram.</td><td style="font-size:11px">Bridge the gap between trade knowledge and property owner understanding</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:14px">Practical Growth Tips — Ranked by Impact</h3>
+          <div class="growth-tips">
+            <div class="gt"><div class="gt-n">1</div><div class="gt-t">Dominate the HMO Compliance Niche</div><div class="gt-d">No competitor is specifically creating content for HMO landlords who need fire safety guidance. Post one dedicated HMO compliance post per week across all platforms. This is your fastest route to authority.</div><div class="impact-bar"><div class="impact-fill" style="width:95%"></div></div></div>
+            <div class="gt"><div class="gt-n">2</div><div class="gt-t">LinkedIn Newsletter Launch</div><div class="gt-d">Create a weekly LinkedIn Newsletter: "UK Fire Safety Bulletin". Subscribers receive your content directly in their inbox. Newsletters get 4× higher open rates than regular posts. Name it and promote it from day one.</div><div class="impact-bar"><div class="impact-fill" style="width:88%"></div></div></div>
+            <div class="gt"><div class="gt-n">3</div><div class="gt-t">Hook the Regulatory News Cycle</div><div class="gt-d">Every time UK fire law is updated or a major prosecution is reported, post your take within 24 hours. This positions you as the commentator of record on UK fire safety compliance. Set Google Alerts for "fire safety prosecution UK".</div><div class="impact-bar"><div class="impact-fill" style="width:92%"></div></div></div>
+            <div class="gt"><div class="gt-n">4</div><div class="gt-t">Fire Safety Awareness Weeks</div><div class="gt-d">October: Fire Door Safety Week. November: National Arson Prevention Month. These are annual spikes in public attention. Plan multi-day campaign content for each. Your competitors will post once — you post every day of the week.</div><div class="impact-bar"><div class="impact-fill" style="width:85%"></div></div></div>
+            <div class="gt"><div class="gt-n">5</div><div class="gt-t">Facebook Group Seeding</div><div class="gt-d">Join the top 10 UK landlord, Airbnb, and property Facebook Groups. Post one genuinely valuable fire safety post per group per week. Do not advertise — answer questions. Build trust before building following. 3 months of this creates referrals.</div><div class="impact-bar"><div class="impact-fill" style="width:82%"></div></div></div>
+            <div class="gt"><div class="gt-n">6</div><div class="gt-t">"Free Resource" Lead Magnets</div><div class="gt-d">Post a fire safety checklist PDF for HMOs or hotels: "Free: 27-point fire compliance checklist for UK HMO landlords." Gate it with an email or DM request. This converts followers to leads. FLARE will track and remind you to rotate these monthly.</div><div class="impact-bar"><div class="impact-fill" style="width:90%"></div></div></div>
+            <div class="gt"><div class="gt-n">7</div><div class="gt-t">Collaborate with UK Property Influencers</div><div class="gt-d">Partner with property investor and landlord content creators on Instagram and YouTube. A single collaboration with a 20K-follower landlord influencer brings your content to a qualified, warm audience. Offer to write fire safety guides for their audience.</div><div class="impact-bar"><div class="impact-fill" style="width:76%"></div></div></div>
+            <div class="gt"><div class="gt-n">8</div><div class="gt-t">Post Controversial (But Accurate) Statistics</div><div class="gt-d">"4.8 million UK homes have no working smoke alarm." Posts that shock but inform drive massive shares and comments. Structure as: Stat → Context → What you can do. This is your highest-engagement content format by a significant margin.</div><div class="impact-bar"><div class="impact-fill" style="width:87%"></div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════ LAW HUB ══════ -->
+      <div id="panel-lawHub" class="panel">
+        <div class="panel-inner">
+          <span class="eyebrow">Knowledge Base</span>
+          <h2 class="panel-h">UK Fire Law Hub</h2>
+          <p class="panel-sub">A social media manager for fire safety must know the law as well as any compliance officer. This hub gives you the working knowledge to post with authority, accuracy, and legal precision. Each law has a ready-made content hook.</p>
+          <div class="law-quick">
+            <div class="law-card"><div class="law-yr">RRO 2005 — England &amp; Wales</div><div class="law-name">Regulatory Reform (Fire Safety) Order 2005</div><div class="law-desc">The master legislation. Every non-domestic premise and multi-occupied residential building must have a designated Responsible Person who conducts, documents, and reviews fire risk assessments. Failure = criminal prosecution, unlimited fines.</div><div class="law-hook">"Post hook: 'Do you know who the Responsible Person is in your building? Under UK law, it's not optional — it's your legal duty.'"</div></div>
+            <div class="law-card"><div class="law-yr">2022 — England</div><div class="law-name">Fire Safety (England) Regulations 2022</div><div class="law-desc">Direct response to Grenfell. Introduced quarterly fire door checks, lift inspections, and resident engagement duties for all multi-occupied residential buildings. High-rise buildings (18m+) have additional monthly obligations.</div><div class="law-hook">"Post hook: 'Since January 2023, quarterly fire door checks are legally required in blocks of flats. Is your building compliant?'"</div></div>
+            <div class="law-card"><div class="law-yr">2022 — England</div><div class="law-name">Building Safety Act 2022</div><div class="law-desc">Landmark reform creating the Building Safety Regulator. High-rise buildings (18m+ / 7+ storeys) now have an Accountable Person with duties to register, assess, and manage building safety. The Golden Thread of building information is now a legal requirement.</div><div class="law-hook">"Post hook: 'The Building Safety Act 2022 is the biggest overhaul of building law in 40 years. Here's what it means for your property.'"</div></div>
+            <div class="law-card"><div class="law-yr">SI 2022/547 — England</div><div class="law-name">Smoke &amp; CO Alarm (Amendment) Regulations 2022</div><div class="law-desc">Mandatory CO alarms in every room with a fixed combustion appliance (excluding gas cookers) in all rented properties. Alarms must be tested at the start of every tenancy. Civil penalty up to £5,000 for non-compliance.</div><div class="law-hook">"Post hook: 'If you rent out a property with a gas boiler and no CO alarm — you are breaking the law. Here's what changed in October 2022.'"</div></div>
+            <div class="law-card"><div class="law-yr">2015 — England</div><div class="law-name">Smoke &amp; CO Alarm (England) Regulations 2015</div><div class="law-desc">Required smoke alarms on every storey of rented properties and CO alarms in rooms with solid fuel appliances. The 2022 amendment extended this significantly. Every new tenancy requires a test at the start.</div><div class="law-hook">"Post hook: 'Your landlord is legally required to fit smoke alarms on every floor of your rented home. Do yours work?'"</div></div>
+            <div class="law-card"><div class="law-yr">Housing Act 2004 — UK</div><div class="law-name">HMO Licensing &amp; Management Regulations</div><div class="law-desc">Mandatory licensing for HMOs with 5+ occupants. Fire safety provisions include FD30S fire doors, automatic fire detection (BS 5839-6), and emergency lighting. Local authority may impose additional conditions. Unlimited fine for operating without a licence.</div><div class="law-hook">"Post hook: 'Running an HMO without the correct fire doors? Your licence — and your freedom — could be at risk. Here's the full legal picture.'"</div></div>
+          </div>
+          <h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:12px">Quick-Reference Safety Signs for Social Posts</h3>
+          <p style="font-size:12px;color:var(--t2);margin-bottom:14px">These signs are visual content gold — audiences engage strongly with identification posts. Use these in "Can you identify this sign?" engagement posts.</p>
+          <div class="sign-quick-grid">
+            <div class="sq-card"><div class="sq-ico">🚪</div><div class="sq-name">Fire Door Keep Shut</div></div>
+            <div class="sq-card"><div class="sq-ico">🏃</div><div class="sq-name">Fire Exit</div></div>
+            <div class="sq-card"><div class="sq-ico">🧯</div><div class="sq-name">Extinguisher Location</div></div>
+            <div class="sq-card"><div class="sq-ico">🔴</div><div class="sq-name">Break Glass</div></div>
+            <div class="sq-card"><div class="sq-ico">🔥</div><div class="sq-name">Flammable Material</div></div>
+            <div class="sq-card"><div class="sq-ico">⚡</div><div class="sq-name">Electrical Hazard</div></div>
+            <div class="sq-card"><div class="sq-ico">🏁</div><div class="sq-name">Assembly Point</div></div>
+            <div class="sq-card"><div class="sq-ico">💧</div><div class="sq-name">Hose Reel</div></div>
+            <div class="sq-card"><div class="sq-ico">🛗</div><div class="sq-name">Refuge Area</div></div>
+            <div class="sq-card"><div class="sq-ico">⚠️</div><div class="sq-name">Fire Risk Warning</div></div>
+          </div>
+          <div class="hline"></div>
+          <h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:12px">Content Hooks from UK Statistics</h3>
+          <p style="font-size:12px;color:var(--t2);margin-bottom:14px">Every statistic below is a ready-made post. Statistics are your most shareable, most cited content type on fire safety topics.</p>
+          <div class="content-hook-list">
+            <div class="hook-item"><span class="hook-tag"><span class="tag fire">STAT</span></span><div class="hook-text"><strong>Post: "566,000 calls were made to UK Fire &amp; Rescue Services last year"</strong>This is not a distant risk. This is a daily reality. Here's what it means for property owners...</div></div>
+            <div class="hook-item"><span class="hook-tag"><span class="tag warn">STAT</span></span><div class="hook-text"><strong>Post: "49% of UK dwelling fires start in the kitchen"</strong>Nearly half of all residential fires in England start while cooking. Is your kitchen fire-safe? Here's a 5-step check...</div></div>
+            <div class="hook-item"><span class="hook-tag"><span class="tag teal">STAT</span></span><div class="hook-text"><strong>Post: "22% of UK fires are caused by electrical faults"</strong>Your EICR certificate isn't just paperwork. It's the legal record that protects you, your tenants, and your property...</div></div>
+            <div class="hook-item"><span class="hook-tag"><span class="tag fire">STAT</span></span><div class="hook-text"><strong>Post: "4.8 million UK homes have no working smoke alarm"</strong>That's 4.8 million properties where a small fire can become a fatal one. If you're a landlord, here's your legal obligation...</div></div>
+            <div class="hook-item"><span class="hook-tag"><span class="tag warn">STAT</span></span><div class="hook-text"><strong>Post: "45% of non-residential fires in England are deliberately set"</strong>Arson is the biggest single cause of commercial property fires. Your fire risk assessment must include a deliberate ignition threat assessment...</div></div>
+            <div class="hook-item"><span class="hook-tag"><span class="tag teal">INSIGHT</span></span><div class="hook-text"><strong>Post: "76% of UK fire doors fail inspection — Fire Door Safety Week data"</strong>Three in four fire doors in UK properties don't meet legal standards. Does yours? Here's what inspectors look for...</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════ TOOLS ══════ -->
+      <div id="panel-tools" class="panel">
+        <div class="panel-inner">
+          <span class="eyebrow">Professional Stack</span>
+          <h2 class="panel-h">Recommended Tools &amp; Integrations</h2>
+          <p class="panel-sub">FLARE is your strategy and content brain. These external tools handle scheduling, design, analytics, and community management. Together they form a complete social media operations stack for fire safety authority building.</p>
+          <div class="tools-grid">
+            <div class="tool-card">
+              <div class="tool-ico" style="background:rgba(71,165,255,.1)">📅</div>
+              <div class="tool-name">Buffer</div>
+              <div class="tool-badge" style="background:rgba(71,165,255,.1);color:#47a5ff">Scheduling · Free tier available</div>
+              <div class="tool-desc">Schedule posts across LinkedIn, Facebook and Instagram from a single dashboard. Set exact posting times aligned to FLARE's optimal windows. Supports first-comment hashtags for Instagram.</div>
+              <div class="tool-why">→ Use to execute FLARE's 14-day calendar automatically</div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-ico" style="background:rgba(255,104,48,.1)">🎨</div>
+              <div class="tool-name">Canva Pro</div>
+              <div class="tool-badge" style="background:rgba(255,104,48,.1);color:var(--fire)">Design · £10.99/mo</div>
+              <div class="tool-desc">Create branded fire safety infographics, carousel posts, Instagram Reels thumbnails, and LinkedIn document posts. Canva's Brand Kit ensures every post is visually consistent. Essential for visual authority building.</div>
+              <div class="tool-why">→ Your primary design tool for all post visuals</div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-ico" style="background:rgba(34,197,94,.1)">📊</div>
+              <div class="tool-name">Metricool</div>
+              <div class="tool-badge" style="background:rgba(34,197,94,.1);color:var(--safe)">Analytics · Free + paid</div>
+              <div class="tool-desc">Unified analytics across all platforms. Track which fire safety posts perform best, compare engagement by content type, and get algorithmic best-time recommendations specific to your actual audience.</div>
+              <div class="tool-why">→ Review weekly; feed insights back into FLARE content decisions</div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-ico" style="background:rgba(245,166,35,.1)">🔔</div>
+              <div class="tool-name">Google Alerts</div>
+              <div class="tool-badge" style="background:rgba(245,166,35,.1);color:var(--warm)">Monitoring · Free</div>
+              <div class="tool-desc">Set alerts for: "fire safety prosecution UK", "fire door regulations", "HMO fire death", "Building Safety Act update". Be the first to post when fire safety is in the news — reactive content drives massive reach.</div>
+              <div class="tool-why">→ Set up day one. Check daily before posting</div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-ico" style="background:rgba(0,119,181,.1)">💼</div>
+              <div class="tool-name">LinkedIn Creator Mode</div>
+              <div class="tool-badge" style="background:rgba(0,119,181,.1);color:var(--li)">LinkedIn Feature · Free</div>
+              <div class="tool-desc">Activate Creator Mode on your personal LinkedIn profile to access LinkedIn Live, Newsletter, and algorithmic content boost. Creator profiles get significantly higher organic reach. Enable immediately if not already active.</div>
+              <div class="tool-why">→ Activate Creator Mode + launch "UK Fire Safety Bulletin" newsletter</div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-ico" style="background:rgba(126,82,160,.1)">✍️</div>
+              <div class="tool-name">Notion</div>
+              <div class="tool-badge" style="background:rgba(126,82,160,.1);color:#b388ee">Content Management · Free</div>
+              <div class="tool-desc">Build a content management database mirroring FLARE's post library. Store drafted posts, track publishing status, and maintain your editorial calendar offline. Perfect companion to FLARE for team collaboration.</div>
+              <div class="tool-why">→ Use alongside FLARE to track drafts and publishing status</div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-ico" style="background:rgba(0,201,177,.1)">🤖</div>
+              <div class="tool-name">ChatGPT / Claude</div>
+              <div class="tool-badge" style="background:rgba(0,201,177,.1);color:var(--teal)">AI Assistant · Free + paid</div>
+              <div class="tool-desc">Use AI to adapt FLARE's post library content into platform-specific formats, create visual descriptions for Canva, draft email newsletters, and generate post variations for A/B testing. Always fact-check fire safety specifics against UK law.</div>
+              <div class="tool-why">→ Use for content adaptation — FLARE provides the strategy and ideas</div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-ico" style="background:rgba(255,48,48,.1)">▶️</div>
+              <div class="tool-name">CapCut</div>
+              <div class="tool-badge" style="background:rgba(255,48,48,.1);color:#ff6060">Video Editing · Free</div>
+              <div class="tool-desc">Create Instagram Reels and Facebook video posts. Short-form video explaining fire extinguisher types, fire door checks, and evacuation procedures is the highest-growth content format on Instagram. CapCut makes this accessible without studio equipment.</div>
+              <div class="tool-why">→ Produce minimum 1 Reel per week from FLARE's content library</div>
+            </div>
+          </div>
+          <div class="hline"></div>
+          <div class="card card-p" style="background:rgba(0,201,177,.03);border-color:rgba(0,201,177,.18)">
+            <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal)">Mohammed's Recommended Daily Workflow</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+              <div><div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--t3);letter-spacing:.14em;text-transform:uppercase;margin-bottom:5px">Morning (08:00)</div><div style="font-size:11.5px;color:var(--t2);line-height:1.6">Check Google Alerts · Review FLARE dashboard · Post scheduled LinkedIn content</div></div>
+              <div><div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--t3);letter-spacing:.14em;text-transform:uppercase;margin-bottom:5px">Midday (12:00–13:00)</div><div style="font-size:11.5px;color:var(--t2);line-height:1.6">Respond to all comments · Post LinkedIn lunchtime content · Check Metricool stats</div></div>
+              <div><div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--t3);letter-spacing:.14em;text-transform:uppercase;margin-bottom:5px">Afternoon (16:00)</div><div style="font-size:11.5px;color:var(--t2);line-height:1.6">Prepare next day's Canva visuals · Draft posts in FLARE · Schedule via Buffer</div></div>
+              <div><div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--t3);letter-spacing:.14em;text-transform:uppercase;margin-bottom:5px">Evening (19:00–20:00)</div><div style="font-size:11.5px;color:var(--t2);line-height:1.6">Post Facebook evening content · Engage in Facebook Groups · Weekly review on Fridays</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal-box">
+    <div class="modal-hd">
+      <div>
+        <div class="modal-title" id="m-title">Post Preview</div>
+        <div id="m-meta" style="display:flex;gap:6px;margin-top:5px"></div>
+      </div>
+      <div class="modal-close" onclick="closeModalDirect()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="modal-lbl">Caption</div>
+        <div class="modal-text" id="m-text"></div>
+      </div>
+      <div id="m-hashtags-wrap">
+        <div class="modal-lbl">Hashtags</div>
+        <div class="modal-tags" id="m-hashtags"></div>
+      </div>
+      <div>
+        <div class="modal-lbl">Best posting time</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--teal)" id="m-time"></div>
+      </div>
+      <div id="m-note-wrap" style="display:none">
+        <div class="modal-lbl">Strategic note</div>
+        <div style="font-size:11.5px;color:var(--t2);line-height:1.65;background:var(--tealbg);border-left:2px solid var(--teal);padding:9px 11px;border-radius:0 6px 6px 0" id="m-note"></div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="copy-btn" id="copy-btn" onclick="copyPost()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copy Caption
+      </button>
+      <button class="btn teal" onclick="closeModalDirect()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════
+   FLARE Engine v1.0 — Mohammed Buhari
+═══════════════════════════════════════ */
+
+// ── LOADER ──
+const ldMsgs = ['Loading your workspace…','Syncing content database…','Calibrating post engine…','Generating your fortnight…','FLARE is ready.'];
+let ldi = 0;
+const ldEl = document.getElementById('ld-msg');
+const ldInterval = setInterval(()=>{
+  ldi++;
+  if(ldi < ldMsgs.length) ldEl.textContent = ldMsgs[ldi];
+  if(ldi >= ldMsgs.length - 1) clearInterval(ldInterval);
+}, 420);
+window.addEventListener('load',()=>{
+  setTimeout(()=>{ document.getElementById('loader').classList.add('out'); },2400);
+  const now = new Date();
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('tb-date').textContent = `${days[now.getDay()]} ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+  document.getElementById('today-chip').textContent = `${days[now.getDay()]}`;
+  generateCalendar();
+  buildTodayDash();
+  renderLibrary('all');
+});
+
+// ── NAVIGATION ──
+const panels = {
+  dashboard:'Dashboard / Overview',
+  calendar:'Content Calendar / 14-Day',
+  library:'Post Library / All Posts',
+  playbooks:'Platform Playbooks / Strategy',
+  growth:'Growth Strategy / Competitor Intel',
+  lawHub:'UK Fire Law Hub / Knowledge Base',
+  tools:'Tools & Stack / Integrations',
+};
+function nav(id, el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('act'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('act'));
+  document.getElementById('panel-'+id).classList.add('act');
+  if(el) el.classList.add('act');
+  const info = panels[id]||'FLARE';
+  const parts = info.split('/');
+  document.getElementById('tb-title').innerHTML = `${parts[0].trim()} <span>${(parts[1]||'').trim()}</span>`;
+}
+
+// ── CONTENT DATABASE ──
+const postDB = [
+  // LINKEDIN — Educational
+  {id:'L01',plt:'linkedin',type:'educational',text:`Do you know your legal obligations as a Responsible Person under the Regulatory Reform (Fire Safety) Order 2005?\n\nIf you manage a hotel, HMO, Airbnb property, or any non-domestic premises in England and Wales — you are legally required to:\n\n1. Carry out a written fire risk assessment\n2. Implement fire safety measures based on the findings\n3. Maintain all fire safety equipment in working order\n4. Provide fire safety information and training to all employees\n5. Review the assessment after any significant change\n\nThis is not a tick-box exercise. Failure to comply carries unlimited fines and up to 2 years imprisonment.\n\nIf you're not certain your building is compliant — now is the time to act. 🔥\n\n#FireSafety #HMOCompliance #RRO2005 #UKFireLaw`,time:'Tue–Thu 08:30',hashtags:['#FireSafety','#HMOCompliance','#RRO2005','#UKFireLaw','#ResponsiblePerson'],note:'Open with the direct question — LinkedIn audiences engage 3× more with question-led posts.'},
+  {id:'L02',plt:'linkedin',type:'regulatory',text:`The Fire Safety (England) Regulations 2022 came into force on 23 January 2023.\n\nIf you manage a multi-occupied residential building, here is what changed:\n\n🔹 Quarterly checks of all fire doors (including flat entrance doors) are now mandatory\n🔹 Monthly checks of communal fire doors are required for buildings over 18m\n🔹 Lifts and firefighting equipment must be inspected and tested quarterly\n🔹 Building owners must engage residents in fire safety — annually in writing, and on request\n\nThis is not optional guidance. It is law.\n\nAre your quarterly check records up to date?\n\n#FireDoors #BuildingSafety #FireSafetyEngland2022 #PropertyManagement`,time:'Wed 09:00',hashtags:['#FireDoors','#BuildingSafety','#FireSafetyEngland2022','#PropertyManagement'],note:'Regulatory update posts perform exceptionally — they feel important and urgent.'},
+  {id:'L03',plt:'linkedin',type:'educational',text:`5 fire safety mistakes hotel managers make — and how to avoid them.\n\n1. Not reviewing the fire risk assessment after refurbishments\nAny material change to the building triggers a legal duty to update your FRA.\n\n2. Propping fire doors open for guest convenience\nThis is a criminal offence under the RRO 2005. Install electromagnetic hold-opens linked to the fire alarm instead.\n\n3. Assuming the fire alarm contractor handles compliance\nThe alarm company maintains equipment. The Responsible Person owns the compliance. These are different duties.\n\n4. No Personal Emergency Evacuation Plan for mobility-impaired guests\nA legal requirement. Every public building must have PEEPs for identified individuals.\n\n5. Fire extinguishers as decor\nUnmaintained, incorrectly positioned, or wrong-type extinguishers create false security. Annual BS 5306-3 service is mandatory.\n\nWhich of these resonates with your experience?\n\n#HotelSafety #FireCompliance #HospitalityManagement #UKFireLaw`,time:'Tue 08:00',hashtags:['#HotelSafety','#FireCompliance','#HospitalityManagement','#UKFireLaw'],note:'Listicle format drives saves and shares — hospitality professionals bookmark these.'},
+  {id:'L04',plt:'linkedin',type:'awareness',text:`UK Fire Statistics — what they mean for your property portfolio.\n\n📊 566,000+ calls made to UK Fire & Rescue Services in 2022/23 (Home Office)\n📊 233 accidental dwelling fire deaths in England in 2022/23\n📊 49% of all dwelling fires start in the kitchen\n📊 22% are caused by electrical faults\n📊 4.8 million UK homes have no working smoke alarm\n\nFor HMO landlords and hotel operators, these numbers are not just statistics — they are your risk profile.\n\nA fire risk assessment is your primary legal tool for understanding and reducing your specific risk. If yours is more than 12 months old without a review — it may no longer be fit for purpose.\n\nWhen did you last review yours?\n\n#FireSafetyUK #HMOLandlord #PropertyRisk #FireStatistics`,time:'Thu 12:00',hashtags:['#FireSafetyUK','#HMOLandlord','#PropertyRisk','#FireStatistics'],note:'Statistics posts get heavy engagement in comments — people share their own experiences.'},
+  {id:'L05',plt:'linkedin',type:'engagement',text:`Poll: As a property professional in the UK, what is your biggest fire safety challenge?\n\n▶ Understanding which regulations apply to my premises\n▶ Keeping maintenance records compliant and current\n▶ Cost of bringing the property up to standard\n▶ Managing fire safety with tenants/guests present\n\nI ask because the answer matters to how we approach fire safety education.\n\n#FireSafetyPoll #UKProperty #HMO #FireCompliance`,time:'Mon 08:30',hashtags:['#FireSafetyPoll','#UKProperty','#HMO','#FireCompliance'],note:'Polls are LinkedIn gold — they trigger the algorithm. Post one per week minimum.'},
+  {id:'L06',plt:'linkedin',type:'educational',text:`The colour of a fire extinguisher tells you everything.\n\n🔴 Red — Water: Class A fires (wood, paper, textiles). Never on electrical fires.\n🔵 Blue — Dry Powder: Class A/B/C — versatile but messy. Not for indoor use near equipment.\n🟡 Cream — Foam (AFFF): Class A and B. Seals flammable liquid surfaces.\n⬛ Black — CO₂: Electrical fires and Class B. No residue. Not for Class A.\n🟠 Cream/Yellow — Wet Chemical: Class F ONLY. Commercial kitchens. Legally required.\n\nThe wrong extinguisher on the wrong fire can be fatal.\n\nEvery member of your team should know this before they ever need it.\n\nSave this post. Share it with your team. 🔥\n\n#FireExtinguisher #FireSafetyTraining #UKFireLaw #HospitalityCompliance`,time:'Wed 12:30',hashtags:['#FireExtinguisher','#FireSafetyTraining','#UKFireLaw'],note:'This post gets saved heavily — it is a reference asset. Mention "save this post" explicitly.'},
+  {id:'L07',plt:'linkedin',type:'regulatory',text:`The Building Safety Act 2022 — what every property owner needs to understand.\n\nThis is the most significant change to UK building law in a generation.\n\n🔹 Buildings over 18m (approx 7 storeys) are now "higher-risk buildings"\n🔹 They must be registered with the Building Safety Regulator\n🔹 An Accountable Person must be legally designated\n🔹 A Safety Case Report demonstrating how risks are managed is mandatory\n🔹 Residents have new legal rights to raise safety concerns\n\nFor portfolio investors and managing agents: this affects your liability structure fundamentally.\n\nIf you're uncertain how this applies to your assets — seek legal counsel. This is not something to navigate alone.\n\nI'm happy to discuss the fire safety implications specifically. Comment below or send a direct message.\n\n#BuildingSafetyAct #HighRise #UKProperty #FireSafety`,time:'Fri 08:00',hashtags:['#BuildingSafetyAct','#HighRise','#UKProperty','#FireSafety'],note:'Position you as the expert who understands the latest law — this differentiates from competitors.'},
+  {id:'L08',plt:'linkedin',type:'promotional',text:`Is your fire risk assessment actually compliant with current UK law?\n\nAfter the Fire Safety Act 2021 and the Fire Safety (England) Regulations 2022, many existing fire risk assessments are now technically out of date — even if they were completed recently.\n\nA compliant FRA in 2024 must address:\n✅ External walls and cladding (post-Grenfell obligation)\n✅ Flat entrance doors in multi-occupied buildings\n✅ Quarterly inspection records for fire doors\n✅ Evacuation strategies for mobility-impaired occupants\n✅ Current equipment specification and maintenance records\n\nIf your assessment doesn't cover all of these — it needs to be reviewed.\n\nWe specialise in fire safety compliance for hotels, HMOs, and multi-occupied residential buildings across the UK.\n\nDrop a message if you'd like to discuss your property's specific situation.\n\n#FireRiskAssessment #FireCompliance #HMO #Hotel #UKFireLaw`,time:'Thu 17:00',hashtags:['#FireRiskAssessment','#FireCompliance','#HMO','#Hotel'],note:'Soft promotional post — leads with value and education before the CTA. This ratio is key.'},
+  // FACEBOOK — Awareness/Engagement
+  {id:'F01',plt:'facebook',type:'awareness',text:`⚠️ 4.8 million UK homes have no working smoke alarm.\n\nThat's 4.8 million properties where a small, preventable fire can become fatal.\n\nIf you haven't tested yours recently — do it right now. It takes 10 seconds and could save a life.\n\nIf you're a landlord: you are legally required to fit smoke alarms on every floor of your rental property (Smoke and Carbon Monoxide Alarm Regulations 2015).\n\nNo alarm on every floor = potential £5,000 civil penalty.\n\n🔥 Share this with every landlord you know.\n\n#FireSafety #SmokeAlarm #UKLandlords #FireSafetyUK`,time:'Mon 19:30',hashtags:['#FireSafety','#SmokeAlarm','#UKLandlords'],note:'Shocking statistic with immediate call to action. Perfect for Facebook shares.'},
+  {id:'F02',plt:'facebook',type:'engagement',text:`Quick question for UK landlords and homeowners 👇\n\nDo you know what type of extinguisher to use in a kitchen fire?\n\nA) Water (red label)\nB) CO₂ (black label)\nC) Wet Chemical (cream/yellow label)\nD) Any one nearby — just use it!\n\nComment your answer below. The correct answer (and why it matters) in the replies 🔥\n\n#FireSafety #QuizTime #UKLandlords #AirbnbHost`,time:'Wed 19:00',hashtags:['#FireSafety','#QuizTime','#UKLandlords'],note:'Quiz format drives comment engagement — algorithm rewards this significantly on Facebook.'},
+  {id:'F03',plt:'facebook',type:'educational',text:`The #1 thing UK landlords get wrong about fire doors.\n\nA fire door left propped open is not a fire door. It's a hazard.\n\nFD30 fire doors are legally required in all HMOs. They provide 30 minutes of fire resistance — enough time to evacuate a building safely. But ONLY if they're closed.\n\nPropping a fire door open with a wedge, a chair, or anything else is:\n❌ A criminal offence under the Regulatory Reform Order 2005\n❌ A direct risk to your tenants' lives\n❌ Grounds for losing your HMO licence\n\nFix: Install a door retainer linked to the fire alarm. Fully legal. Self-closing when the alarm sounds.\n\nAny questions about fire door compliance? Drop them below 👇\n\n#FireDoors #HMOLandlord #PropertySafety #UKFireLaw`,time:'Tue 13:00',hashtags:['#FireDoors','#HMOLandlord','#PropertySafety'],note:'Problem-solution format. Landlord audiences strongly engage with HMO-specific guidance.'},
+  {id:'F04',plt:'facebook',type:'awareness',text:`Did you know smoking materials are the leading cause of FATAL fires in the UK?\n\nNot cooking. Not electrical faults. Cigarettes.\n\nMost of these deaths happen between midnight and 6am — when the occupant falls asleep while smoking.\n\nFor Airbnb and B&B hosts:\n🔹 A strict no-smoking policy inside the property is essential\n🔹 Proper outdoor signage (BS EN ISO 7010) is required\n🔹 Fire-safe outdoor receptacles must be provided if guests smoke outside\n🔹 Check for signs of indoor smoking after every checkout\n\nThis is one of the simplest and most significant fire risks you can control in short-let properties.\n\n#AirbnbHost #ShortLet #FireSafety #BnBCompliance`,time:'Sat 11:00',hashtags:['#AirbnbHost','#ShortLet','#FireSafety'],note:'Airbnb/short-let content is highly shareable in Facebook property groups.'},
+  {id:'F05',plt:'facebook',type:'educational',text:`RACE vs PASS — two things every person in a building should know.\n\n🚨 RACE is what you do when fire starts:\n→ Rescue anyone in immediate danger\n→ Alert — raise the alarm, call 999\n→ Contain — close all doors, slow the spread\n→ Extinguish/Evacuate — only fight if safe; otherwise get out\n\n🧯 PASS is how you use a fire extinguisher:\n→ Pull the pin\n→ Aim at the base of the fire\n→ Squeeze the handle\n→ Sweep side to side\n\nPrint this. Put it in your staff room. Save it for your building induction.\n\nHave your team been trained in both? If not — fix that this week.\n\n#FireSafetyTraining #RACE #PASS #FireEvacuation`,time:'Thu 13:00',hashtags:['#FireSafetyTraining','#RACE','#PASS'],note:'Educational post with real practical value — gets saved and shared by property managers.'},
+  {id:'F06',plt:'facebook',type:'promotional',text:`Are you an Airbnb host, HMO landlord, or hotel operator in the UK?\n\nHere's something that surprises many property owners:\n\n👉 You are legally required to carry out a WRITTEN fire risk assessment.\n👉 It must be reviewed after any material change to the property.\n👉 It must be made available to the fire authority on request.\n👉 Not having one is a criminal offence — not a civil matter.\n\nA fire risk assessment isn't bureaucracy. It is the legal documentation that protects you, your guests, and your tenants.\n\nNot sure where to start? Drop us a message and we'll walk you through the process specific to your property type.\n\n#FireRiskAssessment #UKLandlord #AirbnbCompliance #HMO`,time:'Fri 18:00',hashtags:['#FireRiskAssessment','#UKLandlord','#AirbnbCompliance'],note:'CTA-focused post — post this on Fridays when landlords are thinking about admin.'},
+  {id:'F07',plt:'facebook',type:'awareness',text:`🔥 49% of all UK dwelling fires start in the kitchen.\n\nHere's a 60-second kitchen fire safety check:\n\n✅ Do you have a working smoke alarm within 3m of the kitchen?\n✅ Is there a fire blanket on the wall (quick release)?\n✅ Do you have the correct extinguisher for your kitchen type?\n✅ Are cooking appliances cleaned regularly (grease build-up = fuel)?\n✅ Do all occupants know never to use water on an oil fire?\n\nIf you answered no to any of these — your kitchen is one unattended pan away from a very bad night.\n\nShare this with someone who cooks. 🍳\n\n#KitchenFireSafety #FirePrevention #UKFireSafety #CookingFires`,time:'Wed 09:30',hashtags:['#KitchenFireSafety','#FirePrevention','#UKFireSafety'],note:'Actionable checklist format — high save rate and shares. Tag a cook format drives reach.'},
+  // INSTAGRAM
+  {id:'I01',plt:'instagram',type:'educational',text:`🔴🔵🟡⬛🟠\nKnow your extinguishers.\n\nEvery colour means something different. Every fire needs the right response.\n\nRed → Water (wood, paper, textiles only)\nBlue → Dry Powder (gas, liquid, solid)\nCream → Foam AFFF (liquid fires)\nBlack → CO₂ (electrical — NO residue)\nYellow → Wet Chemical (kitchen oil fires — ONLY THIS ONE)\n\nSave this. It could be the difference. 🔥\n\n#FireSafety #FireExtinguisher #FireSafetyUK #KnowYourKit #HMO #AirbnbHost #HotelSafety #PropertySafety #UKFireLaw #FireCompliance`,time:'Mon 12:00',hashtags:['#FireSafety','#FireExtinguisher','#FireSafetyUK','#KnowYourKit'],note:'Colour-coded content performs exceptionally on Instagram — design this as a carousel.'},
+  {id:'I02',plt:'instagram',type:'engagement',text:`Can you identify this fire safety sign? 🤔\n\nComment below before scrolling to find out.\n\nThis is the [Fire Exit] sign — and it's one of the most legally important symbols in any UK building.\n\nUnder BS EN ISO 7010, it must be illuminated 24/7 and positioned so that no person is ever more than [X] metres from a visible sign.\n\nDoes your property have compliant fire exit signage?\n\n🔥 Follow for daily UK fire safety intelligence.\n\n#FireExit #SafetySigns #FireSafetyUK #BSENiso7010 #PropertySafety #HMOLandlord #AirbnbHost #FireCompliance #UKLaw #KnowYourSigns`,time:'Wed 11:30',hashtags:['#FireExit','#SafetySigns','#FireSafetyUK','#BSENiso7010'],note:'Sign identification posts get heavy comment engagement. Use carousel: sign image → answer → law info.'},
+  {id:'I03',plt:'instagram',type:'awareness',text:`30 seconds. That's how fast a room fire can spread to a whole floor.\n\n30 seconds.\n\nThat's why fire doors, smoke alarms, and a clear evacuation route aren't optional extras.\n\nThey are the 30 seconds between escape and tragedy.\n\nFor every building manager, landlord, and hospitality operator in the UK — your legal duty exists for this reason.\n\nKnow your exits. Test your alarms. Check your doors. Every single week.\n\n🔥 Follow @[handle] for UK fire safety guidance.\n\n#FireSafety #FireDoors #EvacuationPlan #30Seconds #UKFireLaw #PropertyManager #HMO #AirbnbSafety #HotelSafety #FirePrevention`,time:'Fri 12:00',hashtags:['#FireSafety','#FireDoors','#EvacuationPlan','#30Seconds'],note:'Emotional hook with stark statistic. Strong Reel script potential — voiceover + timer visual.'},
+  {id:'I04',plt:'instagram',type:'regulatory',text:`NEW LAW: Since 2022, CO alarms are legally required in ALL UK rental properties with a fixed combustion appliance.\n\nGas boiler room? CO alarm required.\nOpen fireplace? CO alarm required.\nOil-fired boiler? CO alarm required.\n\nNot compliant = up to £5,000 civil penalty per breach.\n\nCarbon monoxide is odourless, colourless, and kills silently. This law exists because people died.\n\nAre you compliant?\n\n#COAlarm #CarbonMonoxide #UKLandlord #RentalProperty #FireSafety #SmokeSafety #COSafety #PrivateRenting #PropertyLaw #HMOCompliance`,time:'Mon 11:00',hashtags:['#COAlarm','#CarbonMonoxide','#UKLandlord','#RentalProperty'],note:'Regulatory alarm post — strong urgency. Present as a graphic with bold stat as the hook visual.'},
+  {id:'I05',plt:'instagram',type:'educational',text:`RACE method — what to do the moment you discover a fire 🚨\n\nR — RESCUE anyone in immediate danger. Only if it's safe.\nA — ALERT. Break the glass. Shout FIRE. Call 999.\nC — CONTAIN. Close every door behind you. This buys lives.\nE — EVACUATE. Never use the lift. Never go back in.\n\nDrill this. Know it. Share it with every building you manage.\n\nSave this post. Your team needs this.\n\n#RACE #FireEvacuation #FireSafety #EvacuationPlan #UKFireLaw #HMO #HotelSafety #AirbnbHost #FireDrill #FireProtocol`,time:'Wed 19:00',hashtags:['#RACE','#FireEvacuation','#FireSafety','#EvacuationPlan'],note:'Protocol content gets saved by property managers and HR teams — excellent long-term reach asset.'},
+  {id:'I06',plt:'instagram',type:'promotional',text:`If you manage a hotel, HMO, or short-let property in the UK — this post is for you.\n\nYou are the Responsible Person under UK fire law.\n\nThat means:\n→ Written fire risk assessment? Your duty.\n→ Working smoke alarms on every floor? Your duty.\n→ Correct fire doors with self-closers? Your duty.\n→ Staff fire safety training? Your duty.\n\nNot knowing the law is not a defence.\n\nDM us "COMPLIANCE" for a free property fire safety briefing specific to your property type. 🔥\n\n#FireCompliance #HMOLandlord #HotelManager #AirbnbHost #UKFireLaw #ResponsiblePerson #FireRiskAssessment #PropertySafety #FireSafetyUK #GetCompliant`,time:'Fri 19:00',hashtags:['#FireCompliance','#HMOLandlord','#HotelManager','#AirbnbHost'],note:'DM-trigger CTA ("Comment COMPLIANCE") is the most effective lead generation mechanic on Instagram.'},
+  // More LinkedIn
+  {id:'L09',plt:'linkedin',type:'educational',text:`What is a fire risk assessment, and what must it include?\n\nUnder the RRO 2005, a fire risk assessment must:\n\n1. Identify all fire hazards (ignition sources, fuels, oxygen paths)\n2. Identify people at risk — particularly vulnerable persons and sleeping occupants\n3. Evaluate the risk and remove or reduce hazards where possible\n4. Record findings (mandatory if you have 5+ employees)\n5. Prepare an emergency plan\n6. Review regularly, and after any material change\n\nFor hotels and HMOs, the assessment must specifically address:\n→ Sleeping occupants unfamiliar with the layout\n→ Common areas and means of escape\n→ Fire detection and alarm adequacy\n→ Emergency lighting and signage\n\nA general template from the internet is not a compliant FRA. It must be specific to your premises.\n\n#FireRiskAssessment #FRA #UKFireLaw #HMO #HotelCompliance`,time:'Mon 17:30',hashtags:['#FireRiskAssessment','#FRA','#UKFireLaw','#HMO'],note:'In-depth educational content earns authority on LinkedIn — position as the compliance expert.'},
+  {id:'L10',plt:'linkedin',type:'engagement',text:`True or False:\n\n"As an Airbnb host in the UK, I don't need a fire risk assessment because it's just a domestic property."\n\nThe answer might surprise you.\n\n👉 FALSE.\n\nThe moment you rent out accommodation — even temporarily, even one room — your property becomes subject to the Regulatory Reform (Fire Safety) Order 2005 in relation to the common areas and escape routes.\n\nMoreover, your local council may require a licence for short-term lets with specific fire safety conditions.\n\nHave you verified your compliance position as an Airbnb host?\n\n#AirbnbUK #ShortLetLaw #FireCompliance #RRO2005 #HostCompliance`,time:'Tue 12:00',hashtags:['#AirbnbUK','#ShortLetLaw','#FireCompliance','#RRO2005'],note:'Myth-busting format — high engagement because it surprises people. Great for DM enquiries.'},
+  {id:'L11',plt:'linkedin',type:'awareness',text:`A fire door isn't just a door.\n\nIt is a life-safety device. It is a legal requirement. And according to Fire Door Safety Week, 76% of fire doors in UK premises fail inspection.\n\n76%. Three in four.\n\nWhy do they fail?\n→ Self-closer missing or broken\n→ Intumescent seals not fitted or damaged\n→ Gap around the door exceeds 3mm\n→ Door propped open (criminal offence)\n→ Incorrect rating for the location\n\nFor HMO landlords: every bedroom door must be FD30S minimum. For hotels: stairwells require FD60 in many configurations.\n\nWhen did you last inspect your fire doors?\n\n#FireDoors #FireDoorSafetyWeek #HMO #UKFireLaw #PropertyCompliance`,time:'Wed 08:30',hashtags:['#FireDoors','#FireDoorSafetyWeek','#HMO','#UKFireLaw'],note:'Post during Fire Door Safety Week (October) for maximum organic reach boost.'},
+  {id:'L12',plt:'linkedin',type:'promotional',text:`Is your hotel fire safety compliant for 2024?\n\nPost-Grenfell regulation has fundamentally changed what compliance looks like for hospitality operators.\n\nHere's a compliance snapshot for UK hotels:\n\n✅ Fire risk assessment reviewed in last 12 months\n✅ All fire doors self-closing, with intumescent strips and smoke seals\n✅ Addressable fire detection system (BS 5839-1) tested weekly\n✅ Emergency lighting tested monthly (5-min) and annually (3-hour)\n✅ Wet chemical suppression in commercial kitchen\n✅ PEEP (Personal Emergency Evacuation Plan) for each mobility-impaired guest/employee\n✅ Quarterly fire door inspection records maintained\n✅ Staff fire safety training records documented\n\nIf any of these are not in place — your exposure is significant.\n\nOur team specialises in hotel fire safety compliance across England and Wales. DM for a no-obligation consultation.\n\n#HotelSafety #HospitalityCompliance #FireSafety #UKFireLaw`,time:'Thu 08:30',hashtags:['#HotelSafety','#HospitalityCompliance','#FireSafety'],note:'Compliance checklist with CTA — hotel GMs will save and review this against their own position.'},
+  // More Facebook
+  {id:'F08',plt:'facebook',type:'educational',text:`Your CO alarm is just as important as your smoke alarm. 🚨\n\nCarbon monoxide is:\n→ Completely odourless\n→ Completely colourless\n→ Responsible for 40+ deaths in UK homes every year\n\nSince 1 October 2022, UK landlords are legally required to install CO alarms in every room with a fixed combustion appliance.\n\nGas boiler? CO alarm required.\nOil boiler? CO alarm required.\nWood burner or open fireplace? CO alarm required.\n\nMissing one = up to £5,000 fine.\n\nAre yours in place? 👇\n\n#COAlarm #CarbonMonoxide #LandlordLaw #FireSafety #RentalProperty`,time:'Mon 09:00',hashtags:['#COAlarm','#CarbonMonoxide','#LandlordLaw'],note:'Safety awareness post with legal hook — landlord audiences engage and share.'},
+  {id:'F09',plt:'facebook',type:'educational',text:`How to use a fire extinguisher — PASS method 🧯\n\nP — PULL the safety pin\nA — AIM at the BASE of the fire (not the flames)\nS — SQUEEZE the handle\nS — SWEEP side to side until fire is out\n\nImportant:\n⚠️ Only use if the fire is small and you have a clear exit behind you\n⚠️ Never attempt to fight a fire that is larger than a waste bin\n⚠️ Once you discharge an extinguisher — evacuate. Never re-enter.\n\nHave your team practised this? If not — training is a legal obligation for your employees.\n\n#FireExtinguisher #PASS #FireTraining #UKFireLaw #PropertySafety`,time:'Thu 19:00',hashtags:['#FireExtinguisher','#PASS','#FireTraining','#UKFireLaw'],note:'Practical, instructional content performs strongly on Facebook — real-world utility drives shares.'},
+  {id:'F10',plt:'facebook',type:'awareness',text:`🔥 Arson accounts for 45% of all non-domestic fires in England.\n\nAlmost half of all business, retail, and commercial fires are deliberately set.\n\nFor your property:\n🔹 Are your external bins away from the building wall?\n🔹 Is your perimeter well-lit after dark?\n🔹 Is combustible waste removed from the site daily?\n🔹 Do you have CCTV coverage of building access points?\n\nArson risk must be included in every commercial fire risk assessment under RRO 2005. If yours doesn't address it — it needs updating.\n\nProtect your property. Protect your people.\n\n#ArsonPrevention #FireSafety #CommercialProperty #FireRiskAssessment`,time:'Fri 09:00',hashtags:['#ArsonPrevention','#FireSafety','#CommercialProperty'],note:'Arson statistics surprise most audiences — high share rate on this topic.'},
+  // More Instagram
+  {id:'I07',plt:'instagram',type:'educational',text:`3 things your fire door MUST have to be legal in the UK.\n\n1️⃣ Intumescent seals — expand in heat to seal gaps and stop smoke\n2️⃣ Self-closing device — it must close fully and latch without assistance\n3️⃣ Smoke seals — prevent cold smoke passage even before heat\n\nMissing any of these = not a fire door under UK law.\n\nFire Door Safety Week data: 76% of UK fire doors fail inspection.\n\nIs yours one of them?\n\n📌 Save this for your next property inspection.\n\n#FireDoors #FireSafetyUK #HMO #PropertySafety #FD30 #FireCompliance #BuildingSafety #FireDoorSafetyWeek #UKFireLaw #LandlordCompliance`,time:'Mon 12:00',hashtags:['#FireDoors','#FireSafetyUK','#HMO','#PropertySafety'],note:'Product knowledge carousel — 3 slides: cover → each requirement → action CTA.'},
+  {id:'I08',plt:'instagram',type:'awareness',text:`233 people died in accidental dwelling fires in England in 2022/23.\n\n233 families. 233 preventable tragedies.\n\nBehind every statistic is a building where something preventable went wrong.\n\nA missing smoke alarm. A propped fire door. An untested extinguisher.\n\nFire safety is not a compliance exercise. It is a moral responsibility.\n\nShare this. Make your building safer today.\n\n🔥 @[handle] — UK Fire Safety Intelligence\n\n#FireSafety #FireFatalities #UKFireStats #PropertySafety #HMOLandlord #AirbnbHost #HotelSafety #FireCompliance #SaveLives #FirePrevention`,time:'Fri 19:00',hashtags:['#FireSafety','#FireFatalities','#UKFireStats'],note:'Emotionally resonant awareness post — pause-and-share format. Strong visual: clean typography on dark background.'},
+];
+
+// ── CONTENT ENGINE / CALENDAR GENERATOR ──
+let schedule = [];
+let calSeed = Date.now();
+function seededRand(seed, n){ return Math.abs(Math.sin(seed * n + n) * 10000) % 1; }
+
+const postingMatrix = {
+  linkedin: [1,2,3,4,5], // Mon–Fri
+  facebook: [1,2,3,4,5,6], // Mon–Sat
+  instagram: [1,3,5], // Mon,Wed,Fri
+};
+const timeSlots = {
+  linkedin: { morning:'08:30', midday:'12:30', afternoon:'17:30' },
+  facebook: { morning:'09:00', midday:'13:00', evening:'19:30' },
+  instagram: { midday:'12:00', evening:'19:00' },
+};
+
+function generateCalendar(){
+  const regen = document.getElementById('regen-btn');
+  if(regen){ regen.classList.add('spinning'); setTimeout(()=>regen.classList.remove('spinning'),600); }
+  calSeed = Math.floor(Math.random()*999999) + Date.now();
+  schedule = [];
+  const liPosts = postDB.filter(p=>p.plt==='linkedin');
+  const fbPosts = postDB.filter(p=>p.plt==='facebook');
+  const igPosts = postDB.filter(p=>p.plt==='instagram');
+  let liIdx=0,fbIdx=0,igIdx=0;
+  // Shuffle arrays
+  const shuffle=(arr,s)=>{
+    const a=[...arr];
+    for(let i=a.length-1;i>0;i--){const j=Math.floor(seededRand(s,i)*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+    return a;
+  };
+  const liS = shuffle(liPosts, calSeed);
+  const fbS = shuffle(fbPosts, calSeed+1);
+  const igS = shuffle(igPosts, calSeed+2);
+  const now = new Date();
+  const startOfWeek = new Date(now);
+  const dow = now.getDay();
+  const diff = dow === 0 ? -6 : 1 - dow;
+  startOfWeek.setDate(now.getDate() + diff);
+  for(let d=0;d<14;d++){
+    const date = new Date(startOfWeek);
+    date.setDate(startOfWeek.getDate() + d);
+    const dayOfWeek = date.getDay(); // 0=Sun
+    const dayPosts = [];
+    if(postingMatrix.linkedin.includes(dayOfWeek)){
+      const p = liS[liIdx % liS.length]; liIdx++;
+      const tslot = dayOfWeek <= 3 ? 'midday' : 'morning';
+      dayPosts.push({...p, scheduledTime: timeSlots.linkedin[tslot], date: new Date(date)});
+    }
+    if(postingMatrix.facebook.includes(dayOfWeek)){
+      const p = fbS[fbIdx % fbS.length]; fbIdx++;
+      dayPosts.push({...p, scheduledTime: timeSlots.facebook.evening, date: new Date(date)});
+    }
+    if(postingMatrix.instagram.includes(dayOfWeek)){
+      const p = igS[igIdx % igS.length]; igIdx++;
+      dayPosts.push({...p, scheduledTime: timeSlots.instagram.midday, date: new Date(date)});
+    }
+    schedule.push({ date, posts: dayPosts, dayIndex: d });
+  }
+  renderCalendar();
+  updateCycleDates();
+  buildTodayDash();
+}
+
+function updateCycleDates(){
+  if(schedule.length < 14) return;
+  const d1 = schedule[0].date;
+  const d2 = schedule[13].date;
+  const fmt = d => `${d.getDate()} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]}`;
+  document.getElementById('cycle-dates').textContent = `${fmt(d1)} – ${fmt(d2)}`;
+}
+
+const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function renderCalendar(){
+  const w1 = document.getElementById('cal-week1');
+  const w2 = document.getElementById('cal-week2');
+  w1.innerHTML = ''; w2.innerHTML = '';
+  const today = new Date();
+  const isToday = d => d.getDate()===today.getDate()&&d.getMonth()===today.getMonth()&&d.getFullYear()===today.getFullYear();
+  schedule.forEach((day,i)=>{
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell' + (isToday(day.date)?' today':'') + (i>=7?' w2':'');
+    cell.innerHTML = `<div class="cal-dn">${day.date.getDate()} ${monthNames[day.date.getMonth()]}</div><div class="cal-posts">${day.posts.map(p=>`<div class="cal-post ${p.plt}" onclick="openPost(event,${JSON.stringify(p).replace(/"/g,'&quot;')})"><span class="cal-post-lbl">${p.plt.toUpperCase()} · ${p.scheduledTime}</span>${p.text.substring(0,60)}…</div>`).join('')}</div>`;
+    (i<7?w1:w2).appendChild(cell);
+  });
+  document.getElementById('cal-badge').textContent = schedule.reduce((a,d)=>a+d.posts.length,0);
+}
+
+function regenerateCalendar(){ generateCalendar(); }
+
+// ── TODAY DASH ──
+function buildTodayDash(){
+  const today = new Date();
+  const todaySchedule = schedule.find(d=>{
+    return d.date.getDate()===today.getDate()&&d.date.getMonth()===today.getMonth();
+  });
+  const list = document.getElementById('today-list');
+  if(!list) return;
+  if(!todaySchedule || todaySchedule.posts.length===0){
+    list.innerHTML=`<div style="color:var(--t3);font-size:12px;padding:14px 0;text-align:center">No posts scheduled today — weekend or off day</div>`;
+    return;
+  }
+  list.innerHTML = todaySchedule.posts.map((p,i)=>`
+    <div class="tp-item" onclick="openPost(event,${JSON.stringify(p).replace(/"/g,'&quot;')})">
+      <div class="tp-time">${p.scheduledTime}</div>
+      <div style="flex:1">
+        <div class="tp-platform">${p.plt.charAt(0).toUpperCase()+p.plt.slice(1)} · <span class="tag ${p.type}" style="font-size:9px">${p.type}</span></div>
+        <div class="tp-preview">${p.text.substring(0,120)}…</div>
+      </div>
+      <div class="tp-done" id="tp-done-${i}" onclick="toggleDone(event,${i})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+    </div>
+  `).join('');
+  document.getElementById('posts-today-n').textContent = `${todaySchedule.posts.length} post${todaySchedule.posts.length>1?'s':''}`;
+}
+function toggleDone(e,i){
+  e.stopPropagation();
+  document.getElementById(`tp-done-${i}`).classList.toggle('done');
+}
+
+// ── LIBRARY ──
+function renderLibrary(filter){
+  const grid = document.getElementById('lib-grid');
+  if(!grid) return;
+  let posts = postDB;
+  if(filter !== 'all') posts = posts.filter(p=>p.plt===filter||p.type===filter);
+  grid.innerHTML = posts.map(p=>`
+    <div class="lib-card ${p.plt}" onclick="openPost(event,${JSON.stringify(p).replace(/"/g,'&quot;')})">
+      <div class="lib-card-hd">
+        <span class="lib-card-plat" style="color:var(--${p.plt})">${p.plt.charAt(0).toUpperCase()+p.plt.slice(1)}</span>
+        <span class="lib-card-type">${p.type}</span>
+      </div>
+      <div class="lib-card-text">${p.text.substring(0,160)}…</div>
+      <div class="lib-card-ft">
+        <span class="lib-best-time">${p.time}</span>
+        <span class="tag ${p.plt}" style="margin-left:auto">${p.hashtags?.[0]||''}</span>
+      </div>
+    </div>
+  `).join('');
+}
+function filterLib(filter, el){
+  document.querySelectorAll('.lib-filter').forEach(f=>f.classList.remove('on'));
+  el.classList.add('on');
+  renderLibrary(filter);
+}
+
+// ── MODAL ──
+let currentPostText = '';
+function openPost(e, post){
+  e.stopPropagation();
+  if(typeof post === 'string') post = JSON.parse(post);
+  currentPostText = post.text;
+  document.getElementById('m-title').textContent = `${post.plt.charAt(0).toUpperCase()+post.plt.slice(1)} · ${post.type.charAt(0).toUpperCase()+post.type.slice(1)}`;
+  document.getElementById('m-meta').innerHTML = `<span class="tag ${post.plt}">${post.plt}</span><span class="tag teal">${post.type}</span>`;
+  document.getElementById('m-text').textContent = post.text;
+  document.getElementById('m-time').textContent = `Best time: ${post.time||post.scheduledTime||'—'}`;
+  const hh = document.getElementById('m-hashtags');
+  hh.innerHTML = (post.hashtags||[]).map(h=>`<span class="tag teal">${h}</span>`).join('');
+  const nw = document.getElementById('m-note-wrap');
+  if(post.note){ nw.style.display='block'; document.getElementById('m-note').textContent = post.note; }
+  else nw.style.display='none';
+  document.getElementById('copy-btn').classList.remove('done');
+  document.getElementById('copy-btn').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Caption';
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal(e){ if(e.target===document.getElementById('modal')) closeModalDirect(); }
+function closeModalDirect(){ document.getElementById('modal').classList.remove('show'); }
+function copyPost(){
+  navigator.clipboard.writeText(currentPostText).then(()=>{
+    const btn = document.getElementById('copy-btn');
+    btn.classList.add('done');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+    setTimeout(()=>{ btn.classList.remove('done'); btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Caption'; },2000);
+  });
+}
+
+// ── PLATFORM SWITCHER ──
+function switchPlat(id, el){
+  document.querySelectorAll('.plat-btn').forEach(b=>{ b.classList.remove('on'); });
+  el.classList.add('on');
+  ['li','fb','ig'].forEach(p=>{ document.getElementById('plat-'+p).classList.toggle('show', p===id); });
+}
+
+// ── KEYBOARD ──
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModalDirect(); });
+</script>
+</body>
+</html>
